@@ -1,20 +1,41 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { Game } from '../../api/game.js';
 
-// App component - represents the whole app
 class TimerAndSecret extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { codeIndex: 0 };
 
+        this.switchCode = this.switchCode.bind(this);
+    }
+
+    componentWillMount() {
+        this.timeOut = setInterval(this.switchCode, 2000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timeOut);
+    }
+
+    switchCode() {
+        const { finalCodes } = this.props;
+        const nextPos = this.state.codeIndex + 1;
+        if ( nextPos > finalCodes.length - 1 ) {
+            this.setState({ codeIndex: 0 });
+        } else {
+            this.setState({ codeIndex: nextPos });
+        }
+    }
 
     render() {
-        const { game } = this.props;
-        console.log(game);
-        const {players} = game;
+        const { players, finalCodes } = this.props;
+        const code = finalCodes[ this.state.codeIndex ];
 
         return (
             <div id="secret">
-                <nav className="level">
+                <nav className="level topbar">
                     <div className="level-item has-text-centered">
                         <div>
                             <p className="heading">Players</p>
@@ -43,20 +64,28 @@ class TimerAndSecret extends Component {
 
                 <div className="columns binary">
                     <div className="column has-text-centered">
-                        <h1 className="title">0</h1>
+                        <h1 className="title">{code[ 0 ]}</h1>
                     </div>
                     <div className="column has-text-centered">
-                        <h1 className="title">1</h1>
+                        <h1 className="title">{code[ 1 ]}</h1>
                     </div>
                     <div className="column has-text-centered">
-                        <h1 className="title">0</h1>
+                        <h1 className="title">{code[ 2 ]}</h1>
                     </div>
                     <div className="column has-text-centered">
-                        <h1 className="title">1</h1>
+                        <h1 className="title">{code[ 3 ]}</h1>
                     </div>
                     <div className="column has-text-centered">
-                        <h1 className="title">1</h1>
+                        <h1 className="title">{code[ 4 ]}</h1>
                     </div>
+                </div>
+
+                <div className="columns">
+                    {finalCodes.map((x, i) => {
+                        const cName = i === this.state.codeIndex ? 'selected' : '';
+                        return <div key={i} className={`column pos ${cName}`} />
+                    })
+                    }
                 </div>
             </div>
         );
@@ -64,9 +93,20 @@ class TimerAndSecret extends Component {
 }
 
 TimerAndSecret.propTypes = {
-    game: PropTypes.object.isRequired
+    players: PropTypes.array.isRequired,
+    finalCodes: PropTypes.array.isRequired
 };
 
-export default createContainer( () => {
-    return { game: Game.findOne( {} ) || {players: []} };
-}, TimerAndSecret );
+export default withTracker(() => {
+    const game = Game.findOne({}) || {
+        players: [],
+        finalCodes: [ [ ' ', ' ', ' ', ' ', ' ' ] ]
+    };
+
+    const { players, finalCodes } = game;
+
+    return {
+        players,
+        finalCodes
+    };
+})(TimerAndSecret);

@@ -1,4 +1,6 @@
 $almostWhite: #d2d2d2;
+$greenPos: #3a6f36;
+$darker: #1a1a1a;
 
 #secret {
   background-color: #000;
@@ -9,12 +11,29 @@ $almostWhite: #d2d2d2;
   overflow: hidden;
   color: $almostWhite;
 
+  .topbar {
+    .heading {
+      font-size: 60px;
+    }
+    .title {
+      font-size: 60px;
+    }
+  }
+
   .columns {
     margin-top: 60px;
     .column {
       .title {
         color: $almostWhite;
         font-size: 450px;
+      }
+
+      &.pos {
+        background-color: $darker;
+
+        &.selected {
+          background-color: $greenPos;
+        }
       }
     }
   }

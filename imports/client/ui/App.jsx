@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { createContainer } from 'meteor/react-meteor-data';
-import { Tasks } from '../../api/game.js';
+import React, {Component} from 'react';
+import {Tasks} from '../../api/game.js';
 
 // App component - represents the whole app
-class App extends Component {
+export default class App extends Component {
 
     // handleSubmit( event ) {
     //     event.preventDefault();
@@ -30,11 +28,3 @@ class App extends Component {
         );
     }
 }
-
-App.propTypes = {
-    tasks: PropTypes.array.isRequired
-};
-
-export default createContainer( () => {
-    return { tasks: Tasks.find( {} ).fetch() };
-}, App );
