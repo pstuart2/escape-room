@@ -1,5 +1,6 @@
 $almostWhite: #d2d2d2;
 $greenPos: #3a6f36;
+$redPaused: #6f3c15;
 $darker: #1a1a1a;
 
 #secret {
@@ -10,6 +11,11 @@ $darker: #1a1a1a;
   width: 100%;
   overflow: hidden;
   color: $almostWhite;
+
+  .hint-text {
+    margin: 20px;
+    font-size: 40px;
+  }
 
   .topbar {
     .heading {
@@ -33,6 +39,14 @@ $darker: #1a1a1a;
 
         &.selected {
           background-color: $greenPos;
+        }
+      }
+    }
+
+    &.paused {
+      .column {
+        .title {
+          color: $redPaused;
         }
       }
     }
