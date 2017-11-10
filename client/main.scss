@@ -1,0 +1,21 @@
+$almostWhite: #d2d2d2;
+
+#secret {
+  background-color: #000;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  overflow: hidden;
+  color: $almostWhite;
+
+  .columns {
+    margin-top: 60px;
+    .column {
+      .title {
+        color: $almostWhite;
+        font-size: 450px;
+      }
+    }
+  }
+}
