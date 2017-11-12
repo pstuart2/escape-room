@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
-import { Game } from '../../api/game.js';
+import { Game, initialGame } from '../../api/game.js';
 import moment from 'moment';
 import CodeBar from './CodeBar';
 import PausedBar from './PausedBar';
 import numeral from 'numeral';
+import { GameState } from "../../api/game";
 
 class TimerAndSecret extends Component {
 
 
     render() {
-        const { players, finalCodes, hours, minutes, seconds, isRunning, hintText } = this.props;
+        const { players, finalCode, hours, minutes, seconds, gameState, hintText } = this.props;
+
+        if (gameState === GameState.Pending) {
+            return <div id="secret" />
+        }
 
 
         return (
@@ -43,8 +48,8 @@ class TimerAndSecret extends Component {
                     </div>
                 </nav>
 
-                {isRunning && <CodeBar finalCodes={finalCodes}/>}
-                {!isRunning && <PausedBar/>}
+                {gameState === GameState.Running && <CodeBar finalCode={finalCode}/>}
+                {gameState === GameState.Paused && <PausedBar/>}
 
                 <div className="has-text-grey-dark has-text-centered hint-text">{hintText}</div>
             </div>
@@ -54,28 +59,24 @@ class TimerAndSecret extends Component {
 
 TimerAndSecret.propTypes = {
     players: PropTypes.array.isRequired,
-    finalCodes: PropTypes.array.isRequired,
+    finalCode: PropTypes.string.isRequired,
     hours: PropTypes.number.isRequired,
     minutes: PropTypes.number.isRequired,
     seconds: PropTypes.number.isRequired,
-    isRunning: PropTypes.bool.isRequired,
+    gameState: PropTypes.number.isRequired,
     hintText: PropTypes.string.isRequired
 };
 
 export default withTracker(() => {
-    const game = Game.findOne({}) || {
-        players: [],
-        finalCodes: [ [ ' ', ' ', ' ', ' ', ' ' ] ],
-        time: { secondsLeft: 0, isRunning: false },
-        hintText: ''
-    };
+    const game = Game.findOne({}) || initialGame();
 
-    const { players, finalCodes, time, hintText } = game;
+    const { players, finalCode, time, hintText, state } = game;
     const duration = moment.duration(time.secondsLeft, 'seconds');
 
     return {
         players,
-        finalCodes,
+        finalCode,
+        gameState: state,
         hours: duration.hours(),
         minutes: duration.minutes(),
         seconds: duration.seconds(),

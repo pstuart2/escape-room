@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { key } from '../../api/game';
 
 export default class CodeBar extends Component {
 
@@ -19,9 +20,9 @@ export default class CodeBar extends Component {
     }
 
     switchCode() {
-        const { finalCodes } = this.props;
+        const { finalCode } = this.props;
         const nextPos = this.state.codeIndex + 1;
-        if ( nextPos > finalCodes.length - 1 ) {
+        if ( nextPos > finalCode.length - 1 ) {
             this.setState({ codeIndex: 0 });
         } else {
             this.setState({ codeIndex: nextPos });
@@ -29,9 +30,11 @@ export default class CodeBar extends Component {
     }
 
     render() {
-        const { finalCodes } = this.props;
+        const { finalCode } = this.props;
 
-        const code = finalCodes[ this.state.codeIndex ];
+        const finalCodes = finalCode.split('');
+        const codeChar = finalCodes[ this.state.codeIndex ];
+        const code = key[ codeChar ].split('');
 
         return (
             <div>
@@ -66,5 +69,5 @@ export default class CodeBar extends Component {
 }
 
 CodeBar.propTypes = {
-    finalCodes: PropTypes.array.isRequired,
+    finalCode: PropTypes.string.isRequired,
 };

@@ -3,6 +3,14 @@ $greenPos: #3a6f36;
 $redPaused: #6f3c15;
 $darker: #1a1a1a;
 
+body {
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
 #secret {
   background-color: #000;
   position: absolute;
@@ -48,6 +56,16 @@ $darker: #1a1a1a;
         .title {
           color: $redPaused;
         }
+      }
+    }
+  }
+}
+
+#control {
+  .columns {
+    .column {
+      button {
+        width: 100%;
       }
     }
   }
