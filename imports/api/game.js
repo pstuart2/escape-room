@@ -71,7 +71,7 @@ export const spareKey = {
 export function initialGame() {
     return {
         name: 'This is the name',
-        state: GameState.Running,
+        state: GameState.Pending,
         startingIn: 10,
         time: {
             secondsLeft: 3600,
@@ -79,6 +79,13 @@ export function initialGame() {
         },
         players: [ 'Logan', 'Mason', 'Ducan' ],
         finalCode: 'abcdef',
-        hintText: ''
+        hintText: '',
+        questions: [
+            {q: '', a: ''},
+            {q: '', a: ''},
+            {q: '', a: ''},
+            {q: '', a: ''},
+            {q: '', a: ''},
+        ]
     }
 }

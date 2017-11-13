@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
-import { Game } from '../../api/game.js';
-import { GameState, initialGame } from "../../api/game";
+import { Game, GameState, initialGame } from '../../api/game.js';
 import moment from 'moment';
+import Questions from './Questions';
 
 class Control extends Component {
 
@@ -101,6 +101,8 @@ class Control extends Component {
                                type="text" placeholder="Final Code"/>
                     </div>
                 </div>
+
+                <Questions game={game}/>
             </div>
         );
     }
