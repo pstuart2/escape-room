@@ -81,11 +81,11 @@ export function initialGame() {
         finalCode: 'abcdef',
         hintText: '',
         questions: [
-            {q: '', a: ''},
-            {q: '', a: ''},
-            {q: '', a: ''},
-            {q: '', a: ''},
-            {q: '', a: ''},
+            {q: 'The youngest player must enter their birthday', a: '', h: 'mm/dd/yyyy'},
+            {q: '', a: '', h: ''},
+            {q: '', a: '', h: ''},
+            {q: '', a: '', h: ''},
+            {q: '', a: '', h: ''},
         ]
     }
 }
