@@ -7,6 +7,7 @@ import CodeBar from './CodeBar';
 import PausedBar from './PausedBar';
 import numeral from 'numeral';
 import { GameState } from "../../api/game";
+import StartingTimer from './StartingTimer';
 
 class TimerAndSecret extends Component {
 
@@ -16,6 +17,10 @@ class TimerAndSecret extends Component {
 
         if (gameState === GameState.Pending) {
             return <div id="secret" />
+        }
+
+        if (gameState === GameState.Starting) {
+            return <StartingTimer />
         }
 
 
