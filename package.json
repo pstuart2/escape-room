@@ -14,6 +14,7 @@
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
     "react-addons-pure-render-mixin": "^15.6.2",
+    "react-datepicker": "^0.60.2",
     "react-dom": "^16.0.0",
     "react-router": "^4.2.0"
   }

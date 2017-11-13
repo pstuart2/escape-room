@@ -36,7 +36,7 @@ function starting(game) {
 }
 
 function running(game) {
-    Game.update({ _id: gameID }, { '$inc': { 'time.secondsLeft': -1 * game.time.speed } });
+    Game.update({ _id: gameID }, { '$inc': { 'time.seconds': game.time.speed } });
 
     if ( game.time.secondsLeft === 1 ) {
         Game.update({ _id: gameID }, { '$set': { state: GameState.Finished } });

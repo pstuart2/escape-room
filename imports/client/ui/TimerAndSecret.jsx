@@ -71,7 +71,7 @@ export default withTracker(() => {
     const game = Game.findOne({}) || initialGame();
 
     const { players, finalCode, time, hintText, state } = game;
-    const duration = moment.duration(time.secondsLeft, 'seconds');
+    const duration = moment.duration(time.seconds, 'seconds');
 
     return {
         players,

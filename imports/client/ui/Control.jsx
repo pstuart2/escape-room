@@ -11,11 +11,6 @@ class Control extends Component {
         Game.update({ _id: game._id }, { '$set': { hintText: e.target.value } })
     }
 
-    onSecondsLeftChange(e) {
-        const { game } = this.props;
-        Game.update({ _id: game._id }, { '$set': { 'time.secondsLeft': parseInt(e.target.value) || 0 } })
-    }
-
     onSpeedChange(e) {
         const { game } = this.props;
         Game.update({ _id: game._id }, { '$set': { 'time.speed': parseInt(e.target.value) } })
@@ -41,9 +36,9 @@ class Control extends Component {
 
     render() {
         const { game } = this.props;
-        const { secondsLeft, speed } = game.time;
+        const { seconds, speed } = game.time;
 
-        const duration = moment.duration(secondsLeft, 'seconds');
+        const duration = moment.duration(seconds, 'seconds');
 
         return (
             <div id="control" className="container is-fluid">
@@ -63,23 +58,15 @@ class Control extends Component {
                 </div>
 
 
-                <div className="field">
-                    <label className="label">Bottom Message</label>
-                    <div className="control">
-                        <input value={game.hintText} onChange={this.onMessageChange.bind(this)} className="input"
-                               type="text" placeholder="Hint text"/>
-                    </div>
-                </div>
+
 
                 <div className="columns">
                     <div className="column">
                         <div className="field">
-                            <label className="label">Game
-                                Seconds {`${duration.hours()}:${duration.minutes()}:${duration.seconds()}`}</label>
+                            <label className="label">Bottom Message</label>
                             <div className="control">
-                                <input value={`${secondsLeft}`} onChange={this.onSecondsLeftChange.bind(this)}
-                                       className="input"
-                                       type="number" placeholder="Seconds Left"/>
+                                <input value={game.hintText} onChange={this.onMessageChange.bind(this)} className="input"
+                                       type="text" placeholder="Hint text"/>
                             </div>
                         </div>
                     </div>
@@ -92,15 +79,18 @@ class Control extends Component {
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div className="field">
-                    <label className="label">Final Code</label>
-                    <div className="control">
-                        <input value={game.finalCode} onChange={this.onFinalCodeChange.bind(this)} className="input"
-                               type="text" placeholder="Final Code"/>
+                    <div className="column">
+                        <div className="field">
+                            <label className="label">Final Code</label>
+                            <div className="control">
+                                <input value={game.finalCode} onChange={this.onFinalCodeChange.bind(this)} className="input"
+                                       type="text" placeholder="Final Code"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
 
                 <Questions game={game}/>
             </div>
