@@ -1,13 +1,10 @@
 import { Meteor } from 'meteor/meteor';
-import { Game, GameState, initialGame } from '../imports/api/game';
-
-let gameID = null;
+import { Game, GameState, initialGame, gameID } from '../imports/api/game';
 
 Meteor.startup(() => {
-    // This is just for testing.
-    Game.remove({});
-
-    gameID = Game.insert(initialGame());
+    if (!Game.findOne({})) {
+        Game.insert(initialGame());
+    }
 
     Meteor.setInterval(onTick, 1000);
 });

@@ -40,9 +40,11 @@ export const key = {
     'z': '01011',
 };
 
+export const gameID = '0';
 
 export function initialGame() {
     return {
+        _id: gameID,
         name: 'This is the name',
         state: GameState.Pending,
         startingIn: 10,

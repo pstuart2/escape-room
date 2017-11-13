@@ -21,16 +21,33 @@ class Control extends Component {
         Game.update({ _id: game._id }, { '$set': { finalCode: e.target.value.toLowerCase() } })
     }
 
+    start() {
+        Meteor.call('start');
+    }
+
+    pause() {
+        Meteor.call('pause');
+    }
+
+    resume() {
+        Meteor.call('resume');
+    }
+
+    reset() {
+        // TODO: Add validation
+        Meteor.call('reset');
+    }
+
     renderControlButton(game) {
         switch ( game.state ) {
             case GameState.Pending:
-                return <button className="button is-success">Start</button>;
+                return <button onClick={this.start.bind(this)} className="button is-success">Start</button>;
 
             case GameState.Running:
-                return <button className="button is-warning">Pause</button>;
+                return <button onClick={this.pause.bind(this)} className="button is-warning">Pause</button>;
 
             case GameState.Paused:
-                return <button className="button is-success">Resume</button>;
+                return <button onClick={this.resume.bind(this)} className="button is-success">Resume</button>;
         }
     }
 
@@ -53,7 +70,7 @@ class Control extends Component {
                         <button className="button is-black">Lights Off</button>
                     </div>
                     <div className="column">
-                        <button className="button is-danger">Reset Game</button>
+                        <button onClick={this.reset.bind(this)} className="button is-danger">Reset Game</button>
                     </div>
                 </div>
 
