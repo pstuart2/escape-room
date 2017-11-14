@@ -60,6 +60,9 @@ export function initialGame() {
             { q: '', a: '', h: '' },
             { q: '', a: '', h: '' },
             { q: '', a: '', h: '' },
-        ]
+        ],
+        commandsSent: [],
+        timesPaused: 0,
+        secondsPaused: 0
     }
 }

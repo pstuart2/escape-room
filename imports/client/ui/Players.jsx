@@ -19,6 +19,10 @@ class PlayerRow extends Component {
     }
 
     onBdayChange(e) {
+        if (!e) {
+            e = moment();
+        }
+
         const { game, index } = this.props;
         const key = `players.${index}.bday`;
         const setValue = {};
@@ -62,7 +66,7 @@ class PlayerRow extends Component {
 class Players extends Component {
     addPlayer() {
         const { game } = this.props;
-        Game.update({ _id: game._id }, { '$push': { players: { name: 'New Player', bday: new Date() } } })
+        Game.update({ _id: game._id }, { '$push': { players: { name: '', bday: new Date() } } })
     }
 
     render() {

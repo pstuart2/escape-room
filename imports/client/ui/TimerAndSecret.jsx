@@ -15,6 +15,8 @@ class TimerAndSecret extends Component {
     render() {
         const { players, finalCode, hours, minutes, seconds, gameState, hintText } = this.props;
 
+        console.log(gameState);
+
         if (gameState === GameState.Pending) {
             return <div id="secret" />
         }

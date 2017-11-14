@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Game, GameState, initialGame } from '../../api/game.js';
-import moment from 'moment';
 import Questions from './Questions';
 
 class Control extends Component {
@@ -38,6 +37,10 @@ class Control extends Component {
         Meteor.call('reset');
     }
 
+    finish() {
+        Meteor.call('finish');
+    }
+
     renderControlButton(game) {
         switch ( game.state ) {
             case GameState.Pending:
@@ -51,11 +54,22 @@ class Control extends Component {
         }
     }
 
+    renderEndButton(game) {
+        switch ( game.state ) {
+            case GameState.Running:
+                return <button onClick={this.finish.bind(this)} className="button is-danger">Finish</button>;
+
+            case GameState.Finished:
+                return <button onClick={this.reset.bind(this)} className="button is-danger">Reset Game</button>;
+        }
+
+        return null;
+    }
+
     render() {
         const { game } = this.props;
-        const { seconds, speed } = game.time;
+        const { speed } = game.time;
 
-        const duration = moment.duration(seconds, 'seconds');
 
         return (
             <div id="control" className="container is-fluid">
@@ -70,11 +84,9 @@ class Control extends Component {
                         <button className="button is-black">Lights Off</button>
                     </div>
                     <div className="column">
-                        <button onClick={this.reset.bind(this)} className="button is-danger">Reset Game</button>
+                        {this.renderEndButton(game)}
                     </div>
                 </div>
-
-
 
 
                 <div className="columns">
@@ -82,7 +94,8 @@ class Control extends Component {
                         <div className="field">
                             <label className="label">Bottom Message</label>
                             <div className="control">
-                                <input value={game.hintText} onChange={this.onMessageChange.bind(this)} className="input"
+                                <input value={game.hintText} onChange={this.onMessageChange.bind(this)}
+                                       className="input"
                                        type="text" placeholder="Hint text"/>
                             </div>
                         </div>
@@ -100,13 +113,13 @@ class Control extends Component {
                         <div className="field">
                             <label className="label">Final Code</label>
                             <div className="control">
-                                <input value={game.finalCode} onChange={this.onFinalCodeChange.bind(this)} className="input"
+                                <input value={game.finalCode} onChange={this.onFinalCodeChange.bind(this)}
+                                       className="input"
                                        type="text" placeholder="Final Code"/>
                             </div>
                         </div>
                     </div>
                 </div>
-
 
 
                 <Questions game={game}/>

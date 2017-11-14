@@ -1,5 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Game, GameState, gameID, initialGame } from '../imports/api/game';
+import { Game, gameID, GameState, initialGame } from '../imports/api/game';
 
 Meteor.methods({
     start() {
@@ -7,11 +7,15 @@ Meteor.methods({
     },
 
     pause() {
-        Game.update({ _id: gameID }, { '$set': { state: GameState.Paused } });
+        Game.update({ _id: gameID }, { '$set': { state: GameState.Paused }, '$inc': { timesPaused: 1 } });
     },
 
     resume() {
         Game.update({ _id: gameID }, { '$set': { state: GameState.Running } });
+    },
+
+    finish() {
+        Game.update({ _id: gameID }, { '$set': { state: GameState.Finished } });
     },
 
     reset() {

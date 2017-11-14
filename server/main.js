@@ -20,6 +20,10 @@ function onTick() {
         case GameState.Running:
             running(game);
             break;
+
+        case GameState.Paused:
+            paused(game);
+            break;
     }
 }
 
@@ -38,4 +42,8 @@ function running(game) {
     if ( game.time.secondsLeft === 1 ) {
         Game.update({ _id: gameID }, { '$set': { state: GameState.Finished } });
     }
+}
+
+function paused(game) {
+    Game.update({ _id: gameID }, { '$inc': { secondsPaused: 1 } });
 }
