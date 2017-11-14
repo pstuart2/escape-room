@@ -7,7 +7,7 @@ const Player = ({index, player}) => (
     <div>{player.name}</div>
 );
 
-class StartingTimer extends Component {
+export default class StartingTimer extends Component {
 
     render() {
         const { game } = this.props;
@@ -35,11 +35,3 @@ class StartingTimer extends Component {
 StartingTimer.propTypes = {
     game: PropTypes.object.isRequired
 };
-
-export default withTracker(() => {
-    const game = Game.findOne({}) || initialGame();
-
-    return {
-        game
-    };
-})(StartingTimer);

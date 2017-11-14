@@ -1,25 +1,71 @@
 import { Meteor } from 'meteor/meteor';
 import { Game, gameID, GameState, initialGame } from '../imports/api/game';
 
+let timerId = null;
+let runningGameId = null;
+
 Meteor.methods({
-    start() {
-        Game.update({ _id: gameID }, { '$set': { 'startingIn': 10, state: GameState.Starting } });
+    start(_id) {
+        if (runningGameId) {
+            return;
+        }
+
+        runningGameId = _id;
+        Game.update({ _id }, { '$set': { 'startingIn': 10, state: GameState.Starting } });
+
+        timerId = Meteor.setInterval(onTick, 1000);
     },
 
     pause() {
-        Game.update({ _id: gameID }, { '$set': { state: GameState.Paused }, '$inc': { timesPaused: 1 } });
+        Meteor.clearInterval(timerId);
+
+        Game.update({ _id: runningGameId }, { '$set': { state: GameState.Paused }, '$inc': { timesPaused: 1 } });
     },
 
     resume() {
-        Game.update({ _id: gameID }, { '$set': { state: GameState.Running } });
+        timerId = Meteor.setInterval(onTick, 1000);
+
+        Game.update({ _id: runningGameId }, { '$set': { state: GameState.Running } });
     },
 
     finish() {
-        Game.update({ _id: gameID }, { '$set': { state: GameState.Finished } });
-    },
-
-    reset() {
-        Game.remove({});
-        Game.insert(initialGame());
+        Meteor.clearInterval(timerId);
+        Game.update({ _id: runningGameId }, { '$set': { state: GameState.Finished } });
     }
 });
+
+
+function onTick() {
+    const game = Game.findOne({ _id: runningGameId });
+
+    switch ( game.state ) {
+        case GameState.Starting:
+            starting(game);
+            break;
+
+        case GameState.Running:
+            running(game);
+            break;
+
+        case GameState.Paused:
+            paused(game);
+            break;
+    }
+}
+
+function starting(game) {
+    if ( game.startingIn === 1 ) {
+        Game.update({ _id: game._id }, { '$set': { 'startingIn': 0, state: GameState.Running } });
+        return;
+    }
+
+    Game.update({ _id: game._id }, { '$inc': { 'startingIn': -1 } });
+}
+
+function running(game) {
+    Game.update({ _id: game._id }, { '$inc': { 'time.seconds': game.time.speed } });
+}
+
+function paused(game) {
+    Game.update({ _id: game._id }, { '$inc': { secondsPaused: 1 } });
+}

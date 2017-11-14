@@ -13,16 +13,14 @@ class TimerAndSecret extends Component {
 
 
     render() {
-        const { players, finalCode, hours, minutes, seconds, gameState, hintText } = this.props;
-
-        console.log(gameState);
+        const { game, players, finalCode, hours, minutes, seconds, gameState, hintText } = this.props;
 
         if (gameState === GameState.Pending) {
             return <div id="secret" />
         }
 
         if (gameState === GameState.Starting) {
-            return <StartingTimer />
+            return <StartingTimer game={game} />
         }
 
 
@@ -74,13 +72,14 @@ TimerAndSecret.propTypes = {
     hintText: PropTypes.string.isRequired
 };
 
-export default withTracker(() => {
-    const game = Game.findOne({}) || initialGame();
+export default withTracker(({match}) => {
+    const game = Game.findOne({_id: match.params.id}) || initialGame();
 
     const { players, finalCode, time, hintText, state } = game;
     const duration = moment.duration(time.seconds, 'seconds');
 
     return {
+        game,
         players,
         finalCode,
         gameState: state,

@@ -2,8 +2,14 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Game, GameState, initialGame } from '../../api/game.js';
 import Questions from './Questions';
+import { Link } from 'react-router-dom';
 
 class Control extends Component {
+
+    onNameChange(e) {
+        const { game } = this.props;
+        Game.update({ _id: game._id }, { '$set': { name: e.target.value } });
+    }
 
     onMessageChange(e) {
         const { game } = this.props;
@@ -21,7 +27,8 @@ class Control extends Component {
     }
 
     start() {
-        Meteor.call('start');
+        const { game } = this.props;
+        Meteor.call('start', game._id);
     }
 
     pause() {
@@ -32,10 +39,6 @@ class Control extends Component {
         Meteor.call('resume');
     }
 
-    reset() {
-        // TODO: Add validation
-        Meteor.call('reset');
-    }
 
     finish() {
         Meteor.call('finish');
@@ -58,12 +61,9 @@ class Control extends Component {
         switch ( game.state ) {
             case GameState.Running:
                 return <button onClick={this.finish.bind(this)} className="button is-danger">Finish</button>;
-
-            case GameState.Finished:
-                return <button onClick={this.reset.bind(this)} className="button is-danger">Reset Game</button>;
         }
 
-        return null;
+        return <Link to="/" className="button">Game List</Link>;
     }
 
     render() {
@@ -84,10 +84,21 @@ class Control extends Component {
                         <button className="button is-black">Lights Off</button>
                     </div>
                     <div className="column">
+                        <Link to={`/${game._id}/players`} className="button is-primary">Players</Link>
+                    </div>
+                    <div className="column">
                         {this.renderEndButton(game)}
                     </div>
                 </div>
 
+                <div className="field">
+                    <label className="label">Name</label>
+                    <div className="control">
+                        <input value={`${game.name}`} onChange={this.onNameChange.bind(this)}
+                               className="input"
+                               type="text" placeholder="Name of the game"/>
+                    </div>
+                </div>
 
                 <div className="columns">
                     <div className="column">
@@ -129,8 +140,9 @@ class Control extends Component {
 }
 
 
-export default withTracker(() => {
-    const game = Game.findOne({}) || initialGame();
+export default withTracker(({ match }) => {
+
+    const game = Game.findOne({ _id: match.params.id }) || initialGame();
 
     return {
         game

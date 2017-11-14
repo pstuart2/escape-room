@@ -4,10 +4,11 @@ import { withTracker } from 'meteor/react-meteor-data';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Link } from 'react-router-dom';
 
 class PlayerRow extends Component {
     onNameChange(e) {
-        if (e.target.value.length > 15) {
+        if ( e.target.value.length > 15 ) {
             return;
         }
         const { game, index } = this.props;
@@ -19,7 +20,7 @@ class PlayerRow extends Component {
     }
 
     onBdayChange(e) {
-        if (!e) {
+        if ( !e ) {
             e = moment();
         }
 
@@ -35,7 +36,7 @@ class PlayerRow extends Component {
         const { index, player } = this.props;
         return (
             <div>
-                <h3 className="title is-3" style={{marginTop: 20, marginBottom: 5}}>Player {index + 1}</h3>
+                <h3 className="title is-3" style={{ marginTop: 20, marginBottom: 5 }}>Player {index + 1}</h3>
                 <div className="columns">
                     <div className="column">
                         <div className="field">
@@ -51,8 +52,8 @@ class PlayerRow extends Component {
                             <label className="label">Birthday</label>
                             <div className="control">
                                 <DatePicker
-                                selected={moment(player.bday)}
-                                onChange={this.onBdayChange.bind(this)}
+                                    selected={moment(player.bday)}
+                                    onChange={this.onBdayChange.bind(this)}
                                 />
                             </div>
                         </div>
@@ -73,9 +74,12 @@ class Players extends Component {
         const { game } = this.props;
         return (
             <div id="players" className="container is-fluid">
+                <div>
+                    <Link to={`/${game._id}/control`} className="button is-primary">Control</Link>
+                </div>
                 {game.players.map((p, i) => <PlayerRow game={game} key={i} index={i} player={p}/>)}
 
-                <div style={{marginTop: 220}}>
+                <div style={{ marginTop: 220 }}>
                     <button className="button is-success" onClick={this.addPlayer.bind(this)}>Add Player</button>
                 </div>
             </div>
@@ -83,8 +87,8 @@ class Players extends Component {
     }
 }
 
-export default withTracker(() => {
-    const game = Game.findOne({}) || initialGame();
+export default withTracker(({ match }) => {
+    const game = Game.findOne({ _id: match.params.id }) || initialGame();
 
     return {
         game
