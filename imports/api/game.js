@@ -10,6 +10,23 @@ export const GameState = {
     Finished: 4
 };
 
+export const getGameStateString = (gameState) => {
+    switch ( gameState ) {
+        case GameState.Pending:
+            return 'Pending';
+        case GameState.Starting:
+            return 'Starting';
+        case GameState.Running:
+            return 'Running';
+        case GameState.Paused:
+            return 'Paused';
+        case GameState.Finished:
+            return 'Finished';
+    }
+
+    return 'Unknown';
+}
+
 export const key = {
     'a': '00001',
     'b': '00010',

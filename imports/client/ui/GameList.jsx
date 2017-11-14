@@ -1,23 +1,37 @@
 import React, { Component } from 'react';
-import { Game, initialGame } from '../../api/game.js';
+import { Game, initialGame, getGameStateString } from '../../api/game.js';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Link } from 'react-router-dom';
+import moment from 'moment'
+import numeral from 'numeral';
+
+function formatTimeNumber(n) {
+    return numeral(n).format('00');
+}
 
 class GameItem extends Component {
     render() {
         const { game } = this.props;
+        const duration = moment.duration(game.time.seconds, 'seconds');
+        const pauseDuration = moment.duration(game.secondsPaused, 'seconds');
 
         return (
             <div className="column is-4">
                 <div className="card">
                     <header className="card-header">
                         <p className="card-header-title">
-                            {game.name}
+                            {game.name} ({getGameStateString(game.state)})
                         </p>
                     </header>
                     <div className="card-content">
                         <div className="content">
-
+                            <ul>
+                                <li>Players: {game.players.length}</li>
+                                <li>Commands: {game.commandsSent.length}</li>
+                                <li>Time: {formatTimeNumber(duration.hours())}:{formatTimeNumber(duration.minutes())}:{formatTimeNumber(duration.seconds())}</li>
+                                <li>Times Paused: {game.timesPaused}</li>
+                                <li>Time Paused: {formatTimeNumber(pauseDuration.hours())}:{formatTimeNumber(pauseDuration.minutes())}:{formatTimeNumber(pauseDuration.seconds())}</li>
+                            </ul>
                         </div>
                     </div>
                     <footer className="card-footer">
@@ -34,8 +48,7 @@ class GameItem extends Component {
 class GameList extends Component {
 
     addGame() {
-        const gameId = Game.insert(initialGame(this.refs.gameName.value));
-        console.log(gameId);
+        Game.insert(initialGame(this.refs.gameName.value));
     }
 
     render() {
