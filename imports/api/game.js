@@ -25,7 +25,7 @@ export const getGameStateString = (gameState) => {
     }
 
     return 'Unknown';
-}
+};
 
 export const key = {
     'a': '00001',
@@ -60,6 +60,7 @@ export const key = {
 export function initialGame(name) {
     return {
         name,
+        createdAt: new Date(),
         state: GameState.Pending,
         startingIn: 10,
         time: {
@@ -71,7 +72,6 @@ export function initialGame(name) {
         hintText: '',
         questions: [
             { q: 'The youngest player must enter their birthday', a: '', h: 'mm/dd/yyyy' },
-            { q: '', a: '', h: '' },
             { q: '', a: '', h: '' },
             { q: '', a: '', h: '' },
         ],
