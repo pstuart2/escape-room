@@ -73,6 +73,8 @@ TimerAndSecret.propTypes = {
 };
 
 export default withTracker(({match}) => {
+    Meteor.subscribe('game', match.params.id);
+
     const game = Game.findOne({_id: match.params.id}) || initialGame();
 
     const { players, finalCode, time, hintText, state } = game;

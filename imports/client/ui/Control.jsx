@@ -141,7 +141,7 @@ class Control extends Component {
 
 
 export default withTracker(({ match }) => {
-
+    Meteor.subscribe('game', match.params.id);
     const game = Game.findOne({ _id: match.params.id }) || initialGame();
 
     return {

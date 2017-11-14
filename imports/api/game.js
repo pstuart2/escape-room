@@ -80,3 +80,13 @@ export function initialGame(name) {
         secondsPaused: 0
     }
 }
+
+if (Meteor.isServer) {
+    Meteor.publish('games', function gamesPublication() {
+        return Game.find();
+    });
+
+    Meteor.publish('game', function gamesPublication(_id) {
+        return Game.find({_id});
+    });
+}

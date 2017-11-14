@@ -74,6 +74,8 @@ class GameList extends Component {
 }
 
 export default withTracker(() => {
+    Meteor.subscribe('games');
+
     return {
         games: Game.find({}, { sort: { _id: -1 } }).fetch()
     };
