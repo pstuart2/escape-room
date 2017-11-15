@@ -5,6 +5,7 @@ import GameList from './ui/GameList';
 import TimerAndSecret from './ui/TimerAndSecret';
 import Control from './ui/Control';
 import Players from './ui/Players';
+import Answers from './ui/Answers';
 
 const browserHistory = createBrowserHistory();
 
@@ -15,6 +16,7 @@ export const renderRoutes = () => (
             <Route exact path="/:id/secret" component={TimerAndSecret}/>
             <Route exact path="/:id/control" component={Control}/>
             <Route exact path="/:id/players" component={Players}/>
+            <Route exact path="/questions" component={Answers}/>
         </div>
     </Router>
 );

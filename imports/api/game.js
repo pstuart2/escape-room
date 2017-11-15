@@ -32,21 +32,21 @@ export const key = {
     'b': '00010',
     'c': '00011',
 
-    'd': '01000',
-    'e': '00111',
-    'f': '00100',
-    'g': '00110',
-    'h': '01001',
-    'i': '00101',
+    'd': '01000',   // q2
+    'e': '00111',   // q2
+    'f': '00100',   // q2
+    'g': '00110',   // q1
+    'h': '01001',   // q1
+    'i': '00101',   // q1
     'j': '01100',
     'k': '01010',
     'l': '01110',
     'm': '01101',
     'n': '11010',
     'o': '10001',
-    'p': '10000',
-    'q': '10110',
-    'r': '01111',
+    'p': '10000',   // q3
+    'q': '10110',   // q3
+    'r': '01111',   // q3
     's': '10101',
     't': '10010',
     'u': '10111',
@@ -56,6 +56,35 @@ export const key = {
     'y': '11000',
     'z': '01011',
 };
+
+export function getQuestionReward(index) {
+    let result = [];
+
+    switch (index) {
+        case 0:
+            result.push({key: 'g', value: key['g']});
+            result.push({key: 'h', value: key['h']});
+            result.push({key: 'i', value: key['i']});
+            break;
+
+        case 1:
+            result.push({key: 'd', value: key['d']});
+            result.push({key: 'e', value: key['e']});
+            result.push({key: 'f', value: key['f']});
+            break;
+
+        case 2:
+            result.push({key: 'p', value: key['p']});
+            result.push({key: 'q', value: key['q']});
+            result.push({key: 'r', value: key['r']});
+            break;
+
+        default:
+            return null;
+    }
+
+    return result;
+}
 
 export function initialGame(name) {
     return {
@@ -71,22 +100,13 @@ export function initialGame(name) {
         finalCode: 'abcdef',
         hintText: '',
         questions: [
-            { q: 'The youngest player must enter their birthday', a: '', h: 'mm/dd/yyyy' },
-            { q: '', a: '', h: '' },
-            { q: '', a: '', h: '' },
+            { q: 'The youngest player must enter their birthday in the format mm/dd/yyyy. For example if your birthday is February 6, 1974, the you should enter "02/06/1974"', a: '', h: 'mm/dd/yyyy', r: false },
+            { q: '', a: '', h: '', r: false },
+            { q: '', a: '', h: '', r: false },
         ],
         commandsSent: [],
         timesPaused: 0,
-        secondsPaused: 0
+        secondsPaused: 0,
+        questionAttempts: 0
     }
-}
-
-if (Meteor.isServer) {
-    Meteor.publish('games', function gamesPublication() {
-        return Game.find();
-    });
-
-    Meteor.publish('game', function gamesPublication(_id) {
-        return Game.find({_id});
-    });
 }

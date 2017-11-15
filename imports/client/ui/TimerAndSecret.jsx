@@ -35,6 +35,18 @@ class TimerAndSecret extends Component {
                     </div>
                     <div className="level-item has-text-centered">
                         <div>
+                            <p className="heading">Commands</p>
+                            <p className="title">{game.commandsSent.length}</p>
+                        </div>
+                    </div>
+                    <div className="level-item has-text-centered">
+                        <div>
+                            <p className="heading">Answers</p>
+                            <p className="title">{game.questionAttempts || 0}</p>
+                        </div>
+                    </div>
+                    <div className="level-item has-text-centered">
+                        <div>
                             <p className="heading">Hours</p>
                             <p className="title">{hours}</p>
                         </div>
