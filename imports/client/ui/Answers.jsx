@@ -24,11 +24,7 @@ class AnswerRow extends Component {
     handleSubmit(e) {
         e.preventDefault();
         const {index} = this.props;
-        Meteor.call('answer', index, this.refs.answer.value, (err, res) => {
-            if (!res) {
-                alert('Wrong');
-            }
-        });
+        Meteor.call('answer', index, this.refs.answer.value);
     }
 
     render() {

@@ -6,61 +6,78 @@ import { Link } from 'react-router-dom';
 
 class Control extends Component {
 
-    onNameChange(e) {
+    onNameChange( e ) {
         const { game } = this.props;
-        Game.update({ _id: game._id }, { '$set': { name: e.target.value } });
+        Game.update( { _id: game._id }, { '$set': { name: e.target.value } } );
     }
 
-    onMessageChange(e) {
+    onMessageChange( e ) {
         const { game } = this.props;
-        Game.update({ _id: game._id }, { '$set': { hintText: e.target.value } })
+        Game.update( { _id: game._id }, { '$set': { hintText: e.target.value } } )
     }
 
-    onSpeedChange(e) {
+    onSpeedChange( e ) {
         const { game } = this.props;
-        Game.update({ _id: game._id }, { '$set': { 'time.speed': parseInt(e.target.value) } })
+        Game.update( { _id: game._id }, { '$set': { 'time.speed': parseInt( e.target.value ) } } )
     }
 
-    onFinalCodeChange(e) {
+    onFinalCodeChange( e ) {
         const { game } = this.props;
-        Game.update({ _id: game._id }, { '$set': { finalCode: e.target.value.toLowerCase() } })
+        Game.update( { _id: game._id }, { '$set': { finalCode: e.target.value.toLowerCase() } } )
     }
 
     start() {
         const { game } = this.props;
-        Meteor.call('start', game._id);
+        Meteor.call( 'start', game._id );
     }
 
     pause() {
-        Meteor.call('pause');
+        Meteor.call( 'pause' );
     }
 
     resume() {
-        Meteor.call('resume');
+        Meteor.call( 'resume' );
     }
 
 
     finish() {
-        Meteor.call('finish');
+        Meteor.call( 'finish' );
     }
 
-    renderControlButton(game) {
+    wallLightsOnly() {
+        Meteor.call( 'wallLightsOnly' );
+
+    }
+
+    gameRoomLightsOnly() {
+        Meteor.call( 'gameRoomLightsOnly' );
+    }
+
+    lightsOn() {
+        Meteor.call( 'lightsOn' );
+    }
+
+    lightsOff() {
+        Meteor.call( 'lightsOff' );
+    }
+
+    renderControlButton( game ) {
         switch ( game.state ) {
             case GameState.Pending:
-                return <button onClick={this.start.bind(this)} className="button is-success">Start</button>;
+                return <button onClick={this.start.bind( this )} className="button is-success">Start</button>;
 
             case GameState.Running:
-                return <button onClick={this.pause.bind(this)} className="button is-warning">Pause</button>;
+                return <button onClick={this.pause.bind( this )} className="button is-warning">Pause</button>;
 
             case GameState.Paused:
-                return <button onClick={this.resume.bind(this)} className="button is-success">Resume</button>;
+                return <button onClick={this.resume.bind( this )} className="button is-success">Resume</button>;
         }
     }
 
-    renderEndButton(game) {
+    renderEndButton( game ) {
         switch ( game.state ) {
             case GameState.Running:
-                return <button onClick={this.finish.bind(this)} className="button is-danger">Finish</button>;
+                return <button onClick={this.finish.bind( this )} className="button is-danger">Finish</button>;
         }
 
         return <Link to="/" className="button">Game List</Link>;
@@ -75,26 +92,34 @@ class Control extends Component {
             <div id="control" className="container is-fluid">
                 <div className="columns">
                     <div className="column">
-                        {this.renderControlButton(game)}
+                        {this.renderControlButton( game )}
                     </div>
                     <div className="column">
-                        <button className="button is-light">Lights On</button>
+                        <button className="button is-light" onClick={this.lightsOn.bind( this )}>Lights On</button>
                     </div>
                     <div className="column">
-                        <button className="button is-black">Lights Off</button>
+                        <button className="button is-dark" onClick={this.wallLightsOnly.bind( this )}>Wall Lights
+                        </button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-info" onClick={this.gameRoomLightsOnly.bind( this )}>Game Room
+                        </button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-black" onClick={this.lightsOff.bind( this )}>Lights Off</button>
                     </div>
                     <div className="column">
                         <Link to={`/${game._id}/players`} className="button is-primary">Players</Link>
                     </div>
                     <div className="column">
-                        {this.renderEndButton(game)}
+                        {this.renderEndButton( game )}
                     </div>
                 </div>
 
                 <div className="field">
                     <label className="label">Name</label>
                     <div className="control">
-                        <input value={`${game.name}`} onChange={this.onNameChange.bind(this)}
+                        <input value={`${game.name}`} onChange={this.onNameChange.bind( this )}
                                className="input"
                                type="text" placeholder="Name of the game"/>
                     </div>
@@ -105,7 +130,7 @@ class Control extends Component {
                         <div className="field">
                             <label className="label">Bottom Message</label>
                             <div className="control">
-                                <input value={game.hintText} onChange={this.onMessageChange.bind(this)}
+                                <input value={game.hintText} onChange={this.onMessageChange.bind( this )}
                                        className="input"
                                        type="text" placeholder="Hint text"/>
                             </div>
@@ -115,7 +140,7 @@ class Control extends Component {
                         <div className="field">
                             <label className="label">Speed</label>
                             <div className="control">
-                                <input value={`${speed}`} onChange={this.onSpeedChange.bind(this)} className="input"
+                                <input value={`${speed}`} onChange={this.onSpeedChange.bind( this )} className="input"
                                        type="number" placeholder="Game Speed"/>
                             </div>
                         </div>
@@ -124,7 +149,7 @@ class Control extends Component {
                         <div className="field">
                             <label className="label">Final Code</label>
                             <div className="control">
-                                <input value={game.finalCode} onChange={this.onFinalCodeChange.bind(this)}
+                                <input value={game.finalCode} onChange={this.onFinalCodeChange.bind( this )}
                                        className="input"
                                        type="text" placeholder="Final Code"/>
                             </div>
@@ -140,11 +165,11 @@ class Control extends Component {
 }
 
 
-export default withTracker(({ match }) => {
-    Meteor.subscribe('game', match.params.id);
-    const game = Game.findOne({ _id: match.params.id }) || initialGame();
+export default withTracker( ( { match } ) => {
+    Meteor.subscribe( 'game', match.params.id );
+    const game = Game.findOne( { _id: match.params.id } ) || initialGame();
 
     return {
         game
     };
-})(Control);
+} )( Control );
