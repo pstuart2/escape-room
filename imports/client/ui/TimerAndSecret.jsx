@@ -8,6 +8,7 @@ import PausedBar from './PausedBar';
 import numeral from 'numeral';
 import { GameState } from "../../api/game";
 import StartingTimer from './StartingTimer';
+import SummaryBar from './SummaryBar';
 
 class TimerAndSecret extends Component {
 
@@ -67,6 +68,7 @@ class TimerAndSecret extends Component {
 
                 {gameState === GameState.Running && <CodeBar finalCode={finalCode}/>}
                 {gameState === GameState.Paused && <PausedBar/>}
+                {gameState === GameState.Finished && <SummaryBar game={game}/>}
 
                 <div className="has-text-grey-dark has-text-centered hint-text">{hintText}</div>
             </div>

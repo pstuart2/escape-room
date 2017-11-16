@@ -32,33 +32,40 @@ class Control extends Component {
     }
 
     pause() {
-        Meteor.call( 'pause' );
+        const { game } = this.props;
+        Meteor.call( 'pause', game._id );
     }
 
     resume() {
-        Meteor.call( 'resume' );
+        const { game } = this.props;
+        Meteor.call( 'resume', game._id );
     }
 
 
     finish() {
-        Meteor.call( 'finish' );
+        const { game } = this.props;
+        Meteor.call( 'finish', game._id );
     }
 
     wallLightsOnly() {
-        Meteor.call( 'wallLightsOnly' );
+        const { game } = this.props;
+        Meteor.call( 'wallLightsOnly', game._id );
 
     }
 
     gameRoomLightsOnly() {
-        Meteor.call( 'gameRoomLightsOnly' );
+        const { game } = this.props;
+        Meteor.call( 'gameRoomLightsOnly', game._id );
     }
 
     lightsOn() {
-        Meteor.call( 'lightsOn' );
+        const { game } = this.props;
+        Meteor.call( 'lightsOn', game._id );
     }
 
     lightsOff() {
-        Meteor.call( 'lightsOff' );
+        const { game } = this.props;
+        Meteor.call( 'lightsOff', game._id );
     }
 
     renderControlButton( game ) {

@@ -38,20 +38,20 @@ Meteor.publish( 'questions', () => {
 } );
 
 Meteor.methods( {
-    lightsOn() {
-        HTTP.post( `${ApiServer}/state`, { data: { 'state': 'lightsOn' } } );
+    lightsOn( _id ) {
+        HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'lightsOn' } } );
     },
 
-    lightsOff() {
-        HTTP.post( `${ApiServer}/state`, { data: { 'state': 'lightsOff' } } );
+    lightsOff( _id ) {
+        HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'lightsOff' } } );
     },
 
-    wallLightsOnly() {
-        HTTP.post( `${ApiServer}/state`, { data: { 'state': 'wallLightsOnly' } } );
+    wallLightsOnly( _id ) {
+        HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'wallLightsOnly' } } );
     },
 
-    gameRoomLightsOnly() {
-        HTTP.post( `${ApiServer}/state`, { data: { 'state': 'gameRoomLightsOnly' } } );
+    gameRoomLightsOnly( _id ) {
+        HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'gameRoomLightsOnly' } } );
     },
 
     start( _id ) {
@@ -61,31 +61,31 @@ Meteor.methods( {
 
         runningGameId = _id;
 
-        HTTP.post( `${ApiServer}/state`, { data: { 'state': 'starting' } } );
+        HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'starting' } } );
         Game.update( { _id }, { '$set': { 'startingIn': 10, state: GameState.Starting } } );
 
         startTimer();
     },
 
-    pause() {
-        HTTP.post( `${ApiServer}/state`, { data: { 'state': 'pause' } }, () => {
+    pause( _id ) {
+        HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'pause' } }, () => {
         } );
         Meteor.clearInterval( timerId );
 
-        Game.update( { _id: runningGameId }, { '$set': { state: GameState.Paused }, '$inc': { timesPaused: 1 } } );
+        //Game.update( { _id: runningGameId }, { '$set': { state: GameState.Paused }, '$inc': { timesPaused: 1 } } );
     },
 
-    resume() {
-        HTTP.post( `${ApiServer}/state`, { data: { 'state': 'resume' } }, () => {
+    resume( _id ) {
+        HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'resume' } }, () => {
         } );
         startTimer();
 
-        Game.update( { _id: runningGameId }, { '$set': { state: GameState.Running } } );
+        //Game.update( { _id: runningGameId }, { '$set': { state: GameState.Running } } );
     },
 
-    finish() {
+    finish( _id ) {
         Meteor.clearInterval( timerId );
-        HTTP.post( `${ApiServer}/state`, { data: { 'state': 'finish' } }, () => {
+        HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'finish' } }, () => {
         } );
         Game.update( { _id: runningGameId }, { '$set': { state: GameState.Finished } } );
 
