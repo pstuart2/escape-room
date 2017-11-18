@@ -20,9 +20,9 @@ export default class CodeBar extends Component {
     }
 
     switchCode() {
-        const { finalCode } = this.props;
+        const { shutdownCode } = this.props;
         const nextPos = this.state.codeIndex + 1;
-        if ( nextPos > finalCode.length - 1 ) {
+        if ( nextPos > shutdownCode.length - 1 ) {
             this.setState({ codeIndex: 0 });
         } else {
             this.setState({ codeIndex: nextPos });
@@ -30,10 +30,10 @@ export default class CodeBar extends Component {
     }
 
     render() {
-        const { finalCode } = this.props;
+        const { shutdownCode } = this.props;
 
-        const finalCodes = finalCode.split('');
-        const codeChar = finalCodes[ this.state.codeIndex ];
+        const shutdownCodes = shutdownCode.split('');
+        const codeChar = shutdownCodes[ this.state.codeIndex ];
         const code = key[ codeChar ].split('');
 
         return (
@@ -56,7 +56,7 @@ export default class CodeBar extends Component {
                     </div>
                 </div>
                 <div className="columns">
-                    {finalCodes.map((x, i) => {
+                    {shutdownCodes.map((x, i) => {
                         const cName = i === this.state.codeIndex ? 'selected' : '';
                         return <div key={i} className={`column pos ${cName}`}/>
                     })
@@ -69,5 +69,5 @@ export default class CodeBar extends Component {
 }
 
 CodeBar.propTypes = {
-    finalCode: PropTypes.string.isRequired,
+    shutdownCode: PropTypes.string.isRequired,
 };

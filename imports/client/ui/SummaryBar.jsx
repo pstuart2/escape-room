@@ -18,7 +18,7 @@ export default class SummaryBar extends Component {
 
         return (
             <div id="summary">
-                <h1 className="title is-1 has-text-centered">{game.finalCode}</h1>
+                <h1 className="title is-1 has-text-centered">{game.shutdownCode}</h1>
                 <nav className="level topbar">
                     <div className="level-item has-text-centered">
                         <div>

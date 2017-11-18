@@ -21,9 +21,9 @@ class Control extends Component {
         Game.update( { _id: game._id }, { '$set': { 'time.speed': parseInt( e.target.value ) } } )
     }
 
-    onFinalCodeChange( e ) {
+    onShutdownCodeChange( e ) {
         const { game } = this.props;
-        Game.update( { _id: game._id }, { '$set': { finalCode: e.target.value.toLowerCase() } } )
+        Game.update( { _id: game._id }, { '$set': { shutdownCode: e.target.value.toLowerCase() } } )
     }
 
     start() {
@@ -154,11 +154,11 @@ class Control extends Component {
                     </div>
                     <div className="column">
                         <div className="field">
-                            <label className="label">Final Code</label>
+                            <label className="label">Shutdown Code</label>
                             <div className="control">
-                                <input value={game.finalCode} onChange={this.onFinalCodeChange.bind( this )}
+                                <input value={game.shutdownCode} onChange={this.onShutdownCodeChange.bind( this )}
                                        className="input"
-                                       type="text" placeholder="Final Code"/>
+                                       type="text" placeholder="Shutdown Code"/>
                             </div>
                         </div>
                     </div>

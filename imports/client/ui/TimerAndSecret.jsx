@@ -14,7 +14,7 @@ class TimerAndSecret extends Component {
 
 
     render() {
-        const { game, players, finalCode, hours, minutes, seconds, gameState, hintText } = this.props;
+        const { game, players, shutdownCode, hours, minutes, seconds, gameState, hintText } = this.props;
 
         if (gameState === GameState.Pending) {
             return <div id="secret" />
@@ -66,7 +66,7 @@ class TimerAndSecret extends Component {
                     </div>
                 </nav>
 
-                {gameState === GameState.Running && <CodeBar finalCode={finalCode}/>}
+                {gameState === GameState.Running && <CodeBar shutdownCode={shutdownCode}/>}
                 {gameState === GameState.Paused && <PausedBar/>}
                 {gameState === GameState.Finished && <SummaryBar game={game}/>}
 
@@ -78,7 +78,7 @@ class TimerAndSecret extends Component {
 
 TimerAndSecret.propTypes = {
     players: PropTypes.array.isRequired,
-    finalCode: PropTypes.string.isRequired,
+    shutdownCode: PropTypes.string.isRequired,
     hours: PropTypes.number.isRequired,
     minutes: PropTypes.number.isRequired,
     seconds: PropTypes.number.isRequired,
@@ -91,13 +91,13 @@ export default withTracker(({match}) => {
 
     const game = Game.findOne({_id: match.params.id}) || initialGame();
 
-    const { players, finalCode, time, hintText, state } = game;
+    const { players, shutdownCode, time, hintText, state } = game;
     const duration = moment.duration(time.seconds, 'seconds');
 
     return {
         game,
         players,
-        finalCode,
+        shutdownCode,
         gameState: state,
         hours: duration.hours(),
         minutes: duration.minutes(),

@@ -12,6 +12,9 @@ Meteor.startup( () => {
         Meteor.clearInterval( timerId );
     }
 
+    // TODO: Create settings collection (single row) for ApiServer url
+    // TODO: Api server can access it also, then global settings can be shared
+
 
     let runningGame = Game.findOne( { state: { '$nin': [ GameState.Finished, GameState.Pending ] } } );
     if ( runningGame ) {
@@ -71,23 +74,18 @@ Meteor.methods( {
         HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'pause' } }, () => {
         } );
         Meteor.clearInterval( timerId );
-
-        //Game.update( { _id: runningGameId }, { '$set': { state: GameState.Paused }, '$inc': { timesPaused: 1 } } );
     },
 
     resume( _id ) {
         HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'resume' } }, () => {
         } );
         startTimer();
-
-        //Game.update( { _id: runningGameId }, { '$set': { state: GameState.Running } } );
     },
 
     finish( _id ) {
         Meteor.clearInterval( timerId );
         HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'finish' } }, () => {
         } );
-        Game.update( { _id: runningGameId }, { '$set': { state: GameState.Finished } } );
 
         runningGameId = null;
     },

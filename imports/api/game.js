@@ -97,7 +97,7 @@ export function initialGame(name) {
             speed: 1,
         },
         players: [],
-        finalCode: 'abcdef',
+        shutdownCode: 'abcdef',
         hintText: '',
         questions: [
             { q: 'The youngest player must enter their birthday in the format mm/dd/yyyy. For example if your birthday is February 6, 1974, the you should enter "02/06/1974"', a: '', h: 'mm/dd/yyyy', r: false },
