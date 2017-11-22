@@ -87,7 +87,7 @@ class Control extends Component {
                 return <button onClick={this.finish.bind( this )} className="button is-danger">Finish</button>;
         }
 
-        return <Link to="/" className="button">Game List</Link>;
+        return <Link to="/list" className="button">Game List</Link>;
     }
 
     render() {

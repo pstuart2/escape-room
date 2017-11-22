@@ -50,11 +50,11 @@ export const key = {
     's': '10101',
     't': '10010',
     'u': '10111',
-    'v': '10100',
-    'w': '11001',
-    'x': '10011',
-    'y': '11000',
-    'z': '01011',
+    'v': '10100',   // black light
+    'w': '11001',   // black light
+    'x': '10011',   // black light
+    'y': '11000',   // black light
+    'z': '01011',   // black light
 };
 
 export function getQuestionReward(index) {

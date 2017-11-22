@@ -12,11 +12,11 @@ const browserHistory = createBrowserHistory();
 export const renderRoutes = () => (
     <Router history={browserHistory}>
         <div>
-            <Route exact path="/" component={GameList}/>
+            <Route exact path="/list" component={GameList}/>
             <Route exact path="/:id/secret" component={TimerAndSecret}/>
             <Route exact path="/:id/control" component={Control}/>
             <Route exact path="/:id/players" component={Players}/>
-            <Route exact path="/questions" component={Answers}/>
+            <Route exact path="/" component={Answers}/>
         </div>
     </Router>
 );
