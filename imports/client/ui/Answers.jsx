@@ -11,7 +11,7 @@ const Success = ({index, question}) => {
             <div className="column is-12 answer">
                 <table className="table">
                     <tbody>
-                    {question.r.map(v => <tr key={v.key}><td>{v.key}</td><td>=</td><td>{v.value}</td></tr>)}
+                    {question.r.map(v => <tr key={v.key}><td>{v.value}</td><td>=</td><td>{v.key}</td></tr>)}
                     </tbody>
                 </table>
             </div>
