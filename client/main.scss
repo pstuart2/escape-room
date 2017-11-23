@@ -57,6 +57,10 @@ body {
   overflow: hidden;
   color: $almostWhite;
 
+  .hint-item {
+    margin-top: 20px;
+  }
+
   .hint-text {
     margin: 20px;
     font-size: 40px;

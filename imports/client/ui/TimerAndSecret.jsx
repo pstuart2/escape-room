@@ -10,18 +10,33 @@ import { GameState } from "../../api/game";
 import StartingTimer from './StartingTimer';
 import SummaryBar from './SummaryBar';
 
+const HintText = ({ hintText }) => (
+    <div className="level hint-item">
+        <div className="level-left">
+            <div className="level-item">
+                <figure className="image is-64x64">
+                    <img src="/light-bulb.png"/>
+                </figure>
+            </div>
+            <div className="level-item">
+                <div className="has-text-grey-dark hint-text">{hintText}</div>
+            </div>
+        </div>
+    </div>
+);
+
 class TimerAndSecret extends Component {
 
 
     render() {
         const { game, players, shutdownCode, hours, minutes, seconds, gameState, hintText } = this.props;
 
-        if (gameState === GameState.Pending) {
-            return <div id="secret" />
+        if ( gameState === GameState.Pending ) {
+            return <div id="secret"/>
         }
 
-        if (gameState === GameState.Starting) {
-            return <StartingTimer game={game} />
+        if ( gameState === GameState.Starting ) {
+            return <StartingTimer game={game}/>
         }
 
 
@@ -70,7 +85,9 @@ class TimerAndSecret extends Component {
                 {gameState === GameState.Paused && <PausedBar/>}
                 {gameState === GameState.Finished && <SummaryBar game={game}/>}
 
-                <div className="has-text-grey-dark has-text-centered hint-text">{hintText}</div>
+                {hintText.length > 0 && <HintText hintText={hintText}/>}
+
+
             </div>
         );
     }
@@ -86,10 +103,10 @@ TimerAndSecret.propTypes = {
     hintText: PropTypes.string.isRequired
 };
 
-export default withTracker(({match}) => {
+export default withTracker(({ match }) => {
     Meteor.subscribe('game', match.params.id);
 
-    const game = Game.findOne({_id: match.params.id}) || initialGame();
+    const game = Game.findOne({ _id: match.params.id }) || initialGame();
 
     const { players, shutdownCode, time, hintText, state } = game;
     const duration = moment.duration(time.seconds, 'seconds');
