@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
+    "babylonjs": "^3.2.0-alpha0",
     "font-awesome-animation": "^0.1.0",
     "history": "^4.7.2",
     "meteor-node-stubs": "^0.3.2",

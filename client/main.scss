@@ -4,8 +4,20 @@ $greenPos: #3a6f36;
 $redPaused: #6f3c15;
 $darker: #1a1a1a;
 
-body {
+html, body {
   overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+// topbar = 256, hint item = 100
+
+#renderCanvas {
+  width: 100%;
+  height: vh - (276);
+  touch-action: none;
 }
 
 ::-webkit-scrollbar {

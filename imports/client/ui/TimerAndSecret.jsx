@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Game, initialGame } from '../../api/game.js';
 import moment from 'moment';
-import CodeBar from './CodeBar';
-import PausedBar from './PausedBar';
+import Eyes from './Eyes';
 import numeral from 'numeral';
 import { GameState } from "../../api/game";
 import StartingTimer from './StartingTimer';
@@ -31,13 +30,13 @@ class TimerAndSecret extends Component {
     render() {
         const { game, players, shutdownCode, hours, minutes, seconds, gameState, hintText } = this.props;
 
-        if ( gameState === GameState.Pending ) {
-            return <div id="secret"/>
-        }
-
-        if ( gameState === GameState.Starting ) {
-            return <StartingTimer game={game}/>
-        }
+        // if ( gameState === GameState.Pending ) {
+        //     return <div id="secret"/>
+        // }
+        //
+        // if ( gameState === GameState.Starting ) {
+        //     return <StartingTimer game={game}/>
+        // }
 
 
         return (
@@ -81,11 +80,11 @@ class TimerAndSecret extends Component {
                     </div>
                 </nav>
 
-                {gameState === GameState.Running && <CodeBar shutdownCode={shutdownCode}/>}
-                {gameState === GameState.Paused && <PausedBar/>}
+                <Eyes />
+
                 {gameState === GameState.Finished && <SummaryBar game={game}/>}
 
-                {hintText.length > 0 && <HintText hintText={hintText}/>}
+                <HintText hintText="This is the hint"/>
 
 
             </div>
