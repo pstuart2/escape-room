@@ -12,11 +12,9 @@ html, body {
   padding: 0;
 }
 
-// topbar = 256, hint item = 100
-
 #renderCanvas {
   width: 100%;
-  height: vh - (276);
+  height: calc(100vh - 256px);
   touch-action: none;
 }
 
@@ -70,7 +68,7 @@ html, body {
   color: $almostWhite;
 
   .hint-item {
-    margin-top: 20px;
+
   }
 
   .hint-text {

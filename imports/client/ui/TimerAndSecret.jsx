@@ -33,10 +33,10 @@ class TimerAndSecret extends Component {
         // if ( gameState === GameState.Pending ) {
         //     return <div id="secret"/>
         // }
-        //
-        // if ( gameState === GameState.Starting ) {
-        //     return <StartingTimer game={game}/>
-        // }
+
+        if ( gameState === GameState.Starting ) {
+            return <StartingTimer game={game}/>
+        }
 
 
         return (
@@ -46,18 +46,6 @@ class TimerAndSecret extends Component {
                         <div>
                             <p className="heading">Players</p>
                             <p className="title">{players.length}</p>
-                        </div>
-                    </div>
-                    <div className="level-item has-text-centered">
-                        <div>
-                            <p className="heading">Commands</p>
-                            <p className="title">{game.commandsSent.length}</p>
-                        </div>
-                    </div>
-                    <div className="level-item has-text-centered">
-                        <div>
-                            <p className="heading">Answers</p>
-                            <p className="title">{game.questionAttempts || 0}</p>
                         </div>
                     </div>
                     <div className="level-item has-text-centered">
@@ -80,11 +68,11 @@ class TimerAndSecret extends Component {
                     </div>
                 </nav>
 
-                <Eyes />
+                <Eyes eyes={game.eyes} />
 
                 {gameState === GameState.Finished && <SummaryBar game={game}/>}
 
-                <HintText hintText="This is the hint"/>
+                {hintText.length > 0 && <HintText hintText={hintText}/>}
 
 
             </div>
@@ -99,7 +87,7 @@ TimerAndSecret.propTypes = {
     minutes: PropTypes.number.isRequired,
     seconds: PropTypes.number.isRequired,
     gameState: PropTypes.number.isRequired,
-    hintText: PropTypes.string.isRequired
+    hintText: PropTypes.string.isRequired,
 };
 
 export default withTracker(({ match }) => {

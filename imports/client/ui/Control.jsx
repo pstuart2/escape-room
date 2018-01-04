@@ -3,8 +3,14 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Game, GameState, initialGame } from '../../api/game.js';
 import Questions from './Questions';
 import { Link } from 'react-router-dom';
+import { EyeState } from '../../eyes/animations';
 
 class Control extends Component {
+    constructor(props) {
+        super(props);
+
+        this.changeEyes = this.changeEyes.bind(this);
+    }
 
     onNameChange( e ) {
         const { game } = this.props;
@@ -24,6 +30,11 @@ class Control extends Component {
     onShutdownCodeChange( e ) {
         const { game } = this.props;
         Game.update( { _id: game._id }, { '$set': { shutdownCode: e.target.value.toLowerCase() } } )
+    }
+
+    changeEyes(eyeState) {
+        const { game } = this.props;
+        Game.update( { _id: game._id }, { '$set': { 'eyes.state': eyeState } } )
     }
 
     start() {
@@ -120,6 +131,42 @@ class Control extends Component {
                     </div>
                     <div className="column">
                         {this.renderEndButton( game )}
+                    </div>
+                </div>
+
+                <div className="columns">
+                    <div className="column">
+                        <button className="button" onClick={() => this.changeEyes(EyeState.NORMAL)}>NORMAL</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-light" onClick={() => this.changeEyes(EyeState.EYES_DOWN)}>DOWN</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-light" onClick={() => this.changeEyes(EyeState.EYES_UP)}>UP</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-light" onClick={() => this.changeEyes(EyeState.EYES_RIGHT)}>RIGHT</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-light" onClick={() => this.changeEyes(EyeState.EYES_LEFT)}>LEFT</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-primary" onClick={() => this.changeEyes(EyeState.EYES_ROLL)}>ROLL</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-primary" onClick={() => this.changeEyes(EyeState.EYES_SURPRISED)}>SURPRISED</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-info" onClick={() => this.changeEyes(EyeState.HIDE_LEFT)}>HIDE LEFT</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-info" onClick={() => this.changeEyes(EyeState.HIDE_RIGHT)}>HIDE RIGHT</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-success" onClick={() => this.changeEyes(EyeState.YES)}>YES</button>
+                    </div>
+                    <div className="column">
+                        <button className="button is-danger" onClick={() => this.changeEyes(EyeState.NO)}>NO</button>
                     </div>
                 </div>
 
