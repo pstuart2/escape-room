@@ -43,7 +43,6 @@ class GameItem extends Component {
                         <div className="content">
                             <ul>
                                 <li>Players: {game.players.length}</li>
-                                <li>Commands: {game.commandsSent.length}</li>
                                 <li>
                                     Time: {formatTimeNumber(duration.hours())}:{formatTimeNumber(duration.minutes())}:{formatTimeNumber(duration.seconds())}</li>
                                 <li>Times Paused: {game.timesPaused}</li>

@@ -30,6 +30,10 @@ class TimerAndSecret extends Component {
     render() {
         const { game, players, shutdownCode, hours, minutes, seconds, gameState, hintText } = this.props;
 
+        if (!game || !game._id) {
+            return null;
+        }
+
         // if ( gameState === GameState.Pending ) {
         //     return <div id="secret"/>
         // }
@@ -68,7 +72,7 @@ class TimerAndSecret extends Component {
                     </div>
                 </nav>
 
-                <Eyes eyes={game.eyes} />
+                <Eyes eyes={game.eyes} gameId={game._id} />
 
                 {gameState === GameState.Finished && <SummaryBar game={game}/>}
 

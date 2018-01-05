@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { EyeState } from '../eyes/animations';
 
-export const Game = new Mongo.Collection('game');
+export const Game = new Mongo.Collection( 'game' );
 
 export const GameState = {
     Pending: 0,
@@ -11,7 +11,14 @@ export const GameState = {
     Finished: 4
 };
 
-export const getGameStateString = (gameState) => {
+export const EyesInteractState = {
+    Hiding: 0,
+    Waiting: 1,
+    Peeking: 2,
+    Found: 3
+};
+
+export const getGameStateString = ( gameState ) => {
     switch ( gameState ) {
         case GameState.Pending:
             return 'Pending';
@@ -29,7 +36,7 @@ export const getGameStateString = (gameState) => {
 };
 
 
-export function initialGame(name) {
+export function initialGame( name ) {
     return {
         name,
         createdAt: new Date(),
@@ -43,12 +50,18 @@ export function initialGame(name) {
         shutdownCode: 'abcdef',
         hintText: '',
         questions: [
-            { q: 'The youngest player must enter their birthday in the format mm/dd/yyyy. For example if your birthday is February 6, 1974, the you should enter "02/06/1974"', a: '', h: 'mm/dd/yyyy', r: false },
+            {
+                q: 'The youngest player must enter their birthday in the format mm/dd/yyyy. For example if your birthday is February 6, 1974, the you should enter "02/06/1974"',
+                a: '',
+                h: 'mm/dd/yyyy',
+                r: false
+            },
             { q: '', a: '', h: '', r: false },
             { q: '', a: '', h: '', r: false },
         ],
         eyes: {
-          state: EyeState.NORMAL
+            state: EyeState.NORMAL,
+            interact: EyesInteractState.Hiding
         },
         timesPaused: 0,
         secondsPaused: 0,
