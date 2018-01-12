@@ -8,6 +8,7 @@ import numeral from 'numeral';
 import { GameState } from "../../api/game";
 import StartingTimer from './StartingTimer';
 import SummaryBar from './SummaryBar';
+import ListeningText from './ListeningText';
 
 const StateText = ({ hintText, img }) => (
     <div className="level hint-item">
@@ -73,6 +74,8 @@ class TimerAndSecret extends Component {
                 </nav>
 
                 <Eyes eyes={game.eyes} gameId={game._id} />
+                <ListeningText camera={game.camera}/>
+
                 {game.say.length > 0 && <StateText hintText={game.say} img="/icon-text-bubble.png"/>}
                 {hintText.length > 0 && <StateText hintText={hintText} img="/light-bulb.png"/>}
 
