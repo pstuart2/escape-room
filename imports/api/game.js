@@ -1,5 +1,6 @@
 import { Mongo } from 'meteor/mongo';
 import { EyeState } from '../eyes/animations';
+import moment from 'moment';
 
 export const Game = new Mongo.Collection( 'game' );
 
@@ -16,6 +17,14 @@ export const EyesInteractState = {
     Waiting: 1,
     Peeking: 2,
     Found: 3
+};
+
+export const ListeningState = {
+    None: 0,
+    Listening: 1,
+    Fetching: 2,
+    Success: 3,
+    Failed: 4,
 };
 
 export const getGameStateString = ( gameState ) => {
@@ -41,14 +50,21 @@ export function initialGame( name ) {
         name,
         createdAt: new Date(),
         state: GameState.Pending,
-        startingIn: 10,
+        startingIn: 30,
         time: {
             seconds: 0,
             speed: 1,
+            current: moment().toDate(),
+            clock: {
+                hour: 0,
+                min: 0
+            }
         },
+        instructions: 'As new teenagers, you will be expected to have more responsibilities. Because of that you will need to learn how to manager your time better. One trick is to always set your clocks ahead by a few minutes. So be sure to keep your clock set ahead. Do not set it further than *5 minutes* ahead though. We wouldn\'t want to be TOO crazy!',
         players: [],
         shutdownCode: 'abcdef',
         hintText: '',
+        say: '',
         questions: [
             {
                 q: 'The youngest player must enter their birthday in the format mm/dd/yyyy. For example if your birthday is February 6, 1974, the you should enter "02/06/1974"',
@@ -62,6 +78,11 @@ export function initialGame( name ) {
         eyes: {
             state: EyeState.NORMAL,
             interact: EyesInteractState.Hiding
+        },
+        camera: {
+            faceCount: 0,
+            listeningState: ListeningState.None,
+            text: ''
         },
         timesPaused: 0,
         secondsPaused: 0,

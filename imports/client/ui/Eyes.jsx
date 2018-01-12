@@ -4,11 +4,6 @@ import { animate, EyeState, setUpAnimations } from '../../eyes/animations';
 import { Color4, Engine, SceneLoader } from 'babylonjs';
 import { EyesInteractState, Game } from '../../api/game';
 
-
-// TODO: come out when no face for 10 seconds
-// TODO: hide when there is a face
-
-
 export default class Eyes extends Component {
 
     constructor( props ) {
@@ -24,7 +19,11 @@ export default class Eyes extends Component {
         this.engine = new Engine( this.canvas, true );
         renderEyes( this.canvas, this.engine, ( scene ) => {
             this.scene = scene;
-            handleInteractStateChange( this.props.gameId, this.props.eyes, { interact: -1, state: getRandomHideDirection() }, this.scene );
+            const { eyes } = this.props;
+            if ( eyes.interact === EyesInteractState.Hiding ) {
+                setHiddenEyesColor( this.scene );
+                animate( scene, eyes.state );
+            }
         } );
     }
 
@@ -106,6 +105,9 @@ let eyesWaitingTimer = null;
 function handleInteractStateChange( gameId, eyes, prevEyes, scene ) {
     const prevState = prevEyes.interact;
     const newState = eyes.interact;
+
+    console.log( 'prevState', prevState );
+    console.log( 'newState', newState );
 
     if ( prevState === EyesInteractState.Found ) return;
     if ( prevState === newState ) return;

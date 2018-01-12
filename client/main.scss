@@ -51,8 +51,12 @@ html, body {
         font-size: 60px;
 
         &.startingIn {
-          font-size: 450px;
+          font-size: 250px;
         }
+      }
+      .instructions {
+        color: $almostWhite;
+        font-size: 40px;
       }
     }
   }

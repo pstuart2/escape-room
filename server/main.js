@@ -1,8 +1,10 @@
 import { Meteor } from 'meteor/meteor';
-import { Game, GameState, getQuestionReward } from '../imports/api/game';
+import { EyesInteractState, Game, GameState, getQuestionReward } from '../imports/api/game';
 import { HTTP } from 'meteor/http'
+import { EyeState } from '../imports/eyes/animations';
+import moment from 'moment';
 
-const ApiServer = "http://localhost:8080";
+const ApiServer = 'http://localhost:8080';
 
 let timerId = null;
 let runningGameId = null;
@@ -57,6 +59,10 @@ Meteor.methods( {
         HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'gameRoomLightsOnly' } } );
     },
 
+    setGameId(_id) {
+        HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'setGameId' } } );
+    },
+
     start( _id ) {
         if ( runningGameId ) {
             return;
@@ -65,7 +71,17 @@ Meteor.methods( {
         runningGameId = _id;
 
         HTTP.post( `${ApiServer}/state`, { data: { 'id': _id, 'state': 'starting' } } );
-        Game.update( { _id }, { '$set': { 'startingIn': 10, state: GameState.Starting } } );
+        Game.update( { _id }, {
+            '$set':
+                {
+                    startingIn: 10,
+                    state: GameState.Starting,
+                    eyes: {
+                        state: EyeState.NORMAL,
+                        interact: EyesInteractState.Hiding
+                    }
+                }
+        } );
 
         startTimer();
     },
@@ -145,7 +161,10 @@ function starting( game ) {
 }
 
 function running( game ) {
-    Game.update( { _id: game._id }, { '$inc': { 'time.seconds': game.time.speed } } );
+    Game.update( { _id: game._id }, {
+        '$set': { 'time.current': moment().toDate() },
+        '$inc': { 'time.seconds': game.time.speed }
+    } );
 }
 
 function paused( game ) {

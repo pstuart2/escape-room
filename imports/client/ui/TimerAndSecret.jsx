@@ -9,12 +9,12 @@ import { GameState } from "../../api/game";
 import StartingTimer from './StartingTimer';
 import SummaryBar from './SummaryBar';
 
-const HintText = ({ hintText }) => (
+const StateText = ({ hintText, img }) => (
     <div className="level hint-item">
         <div className="level-left">
             <div className="level-item">
                 <figure className="image is-64x64">
-                    <img src="/light-bulb.png"/>
+                    <img src={img}/>
                 </figure>
             </div>
             <div className="level-item">
@@ -28,12 +28,12 @@ class TimerAndSecret extends Component {
 
 
     render() {
-        const { game, players, shutdownCode, hours, minutes, seconds, gameState, hintText } = this.props;
+        const { game, clock, players, hours, minutes, seconds, gameState, hintText } = this.props;
 
         if (!game || !game._id) {
             return null;
         }
-
+        //
         // if ( gameState === GameState.Pending ) {
         //     return <div id="secret"/>
         // }
@@ -54,30 +54,29 @@ class TimerAndSecret extends Component {
                     </div>
                     <div className="level-item has-text-centered">
                         <div>
-                            <p className="heading">Hours</p>
-                            <p className="title">{hours}</p>
+                            <p className="heading">Time</p>
+                            <p className="title">{moment(game.time.current).format('h:mm:ss A')}</p>
                         </div>
                     </div>
                     <div className="level-item has-text-centered">
                         <div>
-                            <p className="heading">Minutes</p>
-                            <p className="title">{numeral(minutes).format('00')}</p>
+                            <p className="heading">Clock</p>
+                            <p className="title">{numeral(clock.hour).format('00')}:{numeral(clock.min).format('00')}</p>
                         </div>
                     </div>
                     <div className="level-item has-text-centered">
                         <div>
-                            <p className="heading">Seconds</p>
-                            <p className="title">{numeral(seconds).format('00')}</p>
+                            <p className="heading">Game Time</p>
+                            <p className="title">{hours}:{numeral(minutes).format('00')}:{numeral(seconds).format('00')}</p>
                         </div>
                     </div>
                 </nav>
 
                 <Eyes eyes={game.eyes} gameId={game._id} />
+                {game.say.length > 0 && <StateText hintText={game.say} img="/icon-text-bubble.png"/>}
+                {hintText.length > 0 && <StateText hintText={hintText} img="/light-bulb.png"/>}
 
                 {gameState === GameState.Finished && <SummaryBar game={game}/>}
-
-                {hintText.length > 0 && <HintText hintText={hintText}/>}
-
 
             </div>
         );
@@ -92,6 +91,7 @@ TimerAndSecret.propTypes = {
     seconds: PropTypes.number.isRequired,
     gameState: PropTypes.number.isRequired,
     hintText: PropTypes.string.isRequired,
+    clock: PropTypes.object.isRequired,
 };
 
 export default withTracker(({ match }) => {
@@ -106,6 +106,7 @@ export default withTracker(({ match }) => {
         game,
         players,
         shutdownCode,
+        clock: time.clock,
         gameState: state,
         hours: duration.hours(),
         minutes: duration.minutes(),

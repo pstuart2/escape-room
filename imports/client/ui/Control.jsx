@@ -6,10 +6,22 @@ import { Link } from 'react-router-dom';
 import { EyeState } from '../../eyes/animations';
 
 class Control extends Component {
-    constructor(props) {
-        super(props);
+    constructor( props ) {
+        super( props );
 
-        this.changeEyes = this.changeEyes.bind(this);
+        this.changeEyes = this.changeEyes.bind( this );
+        this.resetClock = this.resetClock.bind( this );
+        this.setAsCurrentGame = this.setAsCurrentGame.bind( this );
+    }
+
+    resetClock() {
+        const { game } = this.props;
+        Game.update( { _id: game._id }, { '$set': { 'time.clock': { hour: 0, min: 0 } } } );
+    }
+
+    setAsCurrentGame() {
+        const { game } = this.props;
+        Meteor.call( 'setGameId', game._id );
     }
 
     onNameChange( e ) {
@@ -17,14 +29,19 @@ class Control extends Component {
         Game.update( { _id: game._id }, { '$set': { name: e.target.value } } );
     }
 
+    onInstructionsChange( e ) {
+        const { game } = this.props;
+        Game.update( { _id: game._id }, { '$set': { instructions: e.target.value } } );
+    }
+
     onMessageChange( e ) {
         const { game } = this.props;
         Game.update( { _id: game._id }, { '$set': { hintText: e.target.value } } )
     }
 
-    onSpeedChange( e ) {
+    onSayChange( e ) {
         const { game } = this.props;
-        Game.update( { _id: game._id }, { '$set': { 'time.speed': parseInt( e.target.value ) } } )
+        Game.update( { _id: game._id }, { '$set': { 'say': e.target.value } } )
     }
 
     onShutdownCodeChange( e ) {
@@ -32,7 +49,7 @@ class Control extends Component {
         Game.update( { _id: game._id }, { '$set': { shutdownCode: e.target.value.toLowerCase() } } )
     }
 
-    changeEyes(eyeState) {
+    changeEyes( eyeState ) {
         const { game } = this.props;
         Game.update( { _id: game._id }, { '$set': { 'eyes.state': eyeState } } )
     }
@@ -113,6 +130,12 @@ class Control extends Component {
                         {this.renderControlButton( game )}
                     </div>
                     <div className="column">
+                        <button className="button" onClick={this.setAsCurrentGame}>Current Game</button>
+                    </div>
+                    <div className="column">
+                        <button className="button" onClick={this.resetClock}>Reset Clock</button>
+                    </div>
+                    <div className="column">
                         <button className="button is-light" onClick={this.lightsOn.bind( this )}>Lights On</button>
                     </div>
                     <div className="column">
@@ -136,37 +159,51 @@ class Control extends Component {
 
                 <div className="columns">
                     <div className="column">
-                        <button className="button" onClick={() => this.changeEyes(EyeState.NORMAL)}>NORMAL</button>
+                        <button className="button" onClick={() => this.changeEyes( EyeState.NORMAL )}>NORMAL</button>
                     </div>
                     <div className="column">
-                        <button className="button is-light" onClick={() => this.changeEyes(EyeState.EYES_DOWN)}>DOWN</button>
+                        <button className="button is-light" onClick={() => this.changeEyes( EyeState.EYES_DOWN )}>DOWN
+                        </button>
                     </div>
                     <div className="column">
-                        <button className="button is-light" onClick={() => this.changeEyes(EyeState.EYES_UP)}>UP</button>
+                        <button className="button is-light" onClick={() => this.changeEyes( EyeState.EYES_UP )}>UP
+                        </button>
                     </div>
                     <div className="column">
-                        <button className="button is-light" onClick={() => this.changeEyes(EyeState.EYES_RIGHT)}>RIGHT</button>
+                        <button className="button is-light"
+                                onClick={() => this.changeEyes( EyeState.EYES_RIGHT )}>RIGHT
+                        </button>
                     </div>
                     <div className="column">
-                        <button className="button is-light" onClick={() => this.changeEyes(EyeState.EYES_LEFT)}>LEFT</button>
+                        <button className="button is-light" onClick={() => this.changeEyes( EyeState.EYES_LEFT )}>LEFT
+                        </button>
                     </div>
                     <div className="column">
-                        <button className="button is-primary" onClick={() => this.changeEyes(EyeState.EYES_ROLL)}>ROLL</button>
+                        <button className="button is-primary"
+                                onClick={() => this.changeEyes( EyeState.EYES_ROLL )}>ROLL
+                        </button>
                     </div>
                     <div className="column">
-                        <button className="button is-primary" onClick={() => this.changeEyes(EyeState.EYES_SURPRISED)}>SURPRISED</button>
+                        <button className="button is-primary"
+                                onClick={() => this.changeEyes( EyeState.EYES_SURPRISED )}>SURPRISED
+                        </button>
                     </div>
                     <div className="column">
-                        <button className="button is-info" onClick={() => this.changeEyes(EyeState.HIDE_LEFT)}>HIDE LEFT</button>
+                        <button className="button is-info" onClick={() => this.changeEyes( EyeState.HIDE_LEFT )}>HIDE
+                            LEFT
+                        </button>
                     </div>
                     <div className="column">
-                        <button className="button is-info" onClick={() => this.changeEyes(EyeState.HIDE_RIGHT)}>HIDE RIGHT</button>
+                        <button className="button is-info" onClick={() => this.changeEyes( EyeState.HIDE_RIGHT )}>HIDE
+                            RIGHT
+                        </button>
                     </div>
                     <div className="column">
-                        <button className="button is-success" onClick={() => this.changeEyes(EyeState.YES)}>YES</button>
+                        <button className="button is-success" onClick={() => this.changeEyes( EyeState.YES )}>YES
+                        </button>
                     </div>
                     <div className="column">
-                        <button className="button is-danger" onClick={() => this.changeEyes(EyeState.NO)}>NO</button>
+                        <button className="button is-danger" onClick={() => this.changeEyes( EyeState.NO )}>NO</button>
                     </div>
                 </div>
 
@@ -176,6 +213,13 @@ class Control extends Component {
                         <input value={`${game.name}`} onChange={this.onNameChange.bind( this )}
                                className="input"
                                type="text" placeholder="Name of the game"/>
+                    </div>
+                </div>
+
+                <div className="field">
+                    <label className="label">Instructions</label>
+                    <div className="control">
+                        <textarea className="input" onChange={this.onInstructionsChange.bind( this )}>{game.instructions}</textarea>
                     </div>
                 </div>
 
@@ -192,10 +236,10 @@ class Control extends Component {
                     </div>
                     <div className="column">
                         <div className="field">
-                            <label className="label">Speed</label>
+                            <label className="label">Say</label>
                             <div className="control">
-                                <input value={`${speed}`} onChange={this.onSpeedChange.bind( this )} className="input"
-                                       type="number" placeholder="Game Speed"/>
+                                <input value={`${game.say}`} onChange={this.onSayChange.bind( this )} className="input"
+                                       type="text"/>
                             </div>
                         </div>
                     </div>

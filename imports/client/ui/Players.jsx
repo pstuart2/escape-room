@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { Game, initialGame } from '../../api/game.js';
 import { withTracker } from 'meteor/react-meteor-data';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Link } from 'react-router-dom';
 
 class PlayerRow extends Component {
-    onNameChange(e) {
+    onNameChange( e ) {
         if ( e.target.value.length > 15 ) {
             return;
         }
@@ -16,20 +14,7 @@ class PlayerRow extends Component {
         const setValue = {};
         setValue[ key ] = e.target.value;
 
-        Game.update({ _id: game._id }, { '$set': setValue });
-    }
-
-    onBdayChange(e) {
-        if ( !e ) {
-            e = moment();
-        }
-
-        const { game, index } = this.props;
-        const key = `players.${index}.bday`;
-        const setValue = {};
-        setValue[ key ] = e.toDate();
-
-        Game.update({ _id: game._id }, { '$set': setValue });
+        Game.update( { _id: game._id }, { '$set': setValue } );
     }
 
     render() {
@@ -42,19 +27,8 @@ class PlayerRow extends Component {
                         <div className="field">
                             <label className="label">Gamer Tag</label>
                             <div className="control">
-                                <input value={player.name} onChange={this.onNameChange.bind(this)} className="input"
+                                <input value={player.name} onChange={this.onNameChange.bind( this )} className="input"
                                        type="text"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="column">
-                        <div className="field">
-                            <label className="label">Birthday</label>
-                            <div className="control">
-                                <DatePicker
-                                    selected={moment(player.bday)}
-                                    onChange={this.onBdayChange.bind(this)}
-                                />
                             </div>
                         </div>
                     </div>
@@ -67,7 +41,7 @@ class PlayerRow extends Component {
 class Players extends Component {
     addPlayer() {
         const { game } = this.props;
-        Game.update({ _id: game._id }, { '$push': { players: { name: '', bday: new Date() } } })
+        Game.update( { _id: game._id }, { '$push': { players: { name: '' } } } )
     }
 
     render() {
@@ -77,21 +51,21 @@ class Players extends Component {
                 <div>
                     <Link to={`/${game._id}/control`} className="button is-primary">Control</Link>
                 </div>
-                {game.players.map((p, i) => <PlayerRow game={game} key={i} index={i} player={p}/>)}
+                {game.players.map( ( p, i ) => <PlayerRow game={game} key={i} index={i} player={p}/> )}
 
                 <div style={{ marginTop: 220 }}>
-                    <button className="button is-success" onClick={this.addPlayer.bind(this)}>Add Player</button>
+                    <button className="button is-success" onClick={this.addPlayer.bind( this )}>Add Player</button>
                 </div>
             </div>
         );
     }
 }
 
-export default withTracker(({ match }) => {
-    Meteor.subscribe('game', match.params.id);
-    const game = Game.findOne({ _id: match.params.id }) || initialGame();
+export default withTracker( ( { match } ) => {
+    Meteor.subscribe( 'game', match.params.id );
+    const game = Game.findOne( { _id: match.params.id } ) || initialGame();
 
     return {
         game
     };
-})(Players);
+} )( Players );

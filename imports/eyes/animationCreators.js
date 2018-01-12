@@ -733,8 +733,6 @@ function moveX(name, startValue, distance, lastFrame) {
     });
     animation.setKeys(keys);
 
-    console.log(name, `${keys[0].value} --> ${keys[1].value}`);
-
     const easingFunction = new QuarticEase();
     easingFunction.setEasingMode(EasingFunction.EASINGMODE_EASEINOUT);
     animation.setEasingFunction(easingFunction);
