@@ -7,11 +7,12 @@ export default class ListeningText extends Component {
         super(props);
 
         this.getImage = this.getImage.bind(this);
+        this.shouldShow = this.shouldShow.bind(this);
     }
 
     getImage() {
         const state = this.props.camera.listeningState;
-        switch(state) {
+        switch ( state ) {
             case ListeningState.Listening: {
                 return "/icon/listening.png";
             }
@@ -20,20 +21,27 @@ export default class ListeningText extends Component {
                 return "/icon-decoding.png";
             }
 
-            case ListeningState.Success: {
-                return "/icon-text-bubble.png";
-            }
-
             case ListeningState.Failed: {
                 return "/icon-did-not-hear.png";
             }
         }
     }
 
+    shouldShow(state) {
+        switch ( state ) {
+            case ListeningState.Listening:
+            case ListeningState.Fetching:
+            case ListeningState.Failed:
+                return true;
+        }
+
+        return false;
+    }
+
     render() {
         const { camera } = this.props;
 
-        if (camera.listeningState === ListeningState.None) {
+        if ( !this.shouldShow(camera.listeningState) ) {
             return null;
         }
 

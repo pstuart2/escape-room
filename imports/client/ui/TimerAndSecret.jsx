@@ -5,25 +5,31 @@ import { Game, initialGame } from '../../api/game.js';
 import moment from 'moment';
 import Eyes from './Eyes';
 import numeral from 'numeral';
-import { GameState } from "../../api/game";
+import { EyesInteractState, GameState } from "../../api/game";
 import StartingTimer from './StartingTimer';
 import SummaryBar from './SummaryBar';
 import ListeningText from './ListeningText';
 
-const StateText = ({ hintText, img }) => (
-    <div className="level hint-item">
-        <div className="level-left">
-            <div className="level-item">
-                <figure className="image is-64x64">
-                    <img src={img}/>
-                </figure>
-            </div>
-            <div className="level-item">
-                <div className="has-text-grey-dark hint-text">{hintText}</div>
+const StateText = ({ hintText, img }) => {
+    if (hintText.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className="level hint-item">
+            <div className="level-left">
+                <div className="level-item">
+                    <figure className="image is-64x64">
+                        <img src={img}/>
+                    </figure>
+                </div>
+                <div className="level-item">
+                    <div className="has-text-grey-dark hint-text">{hintText}</div>
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 class TimerAndSecret extends Component {
 
@@ -34,10 +40,10 @@ class TimerAndSecret extends Component {
         if (!game || !game._id) {
             return null;
         }
-        //
-        // if ( gameState === GameState.Pending ) {
-        //     return <div id="secret"/>
-        // }
+
+        if ( gameState === GameState.Pending ) {
+            return <div id="secret"/>
+        }
 
         if ( gameState === GameState.Starting ) {
             return <StartingTimer game={game}/>
@@ -76,8 +82,9 @@ class TimerAndSecret extends Component {
                 <Eyes eyes={game.eyes} gameId={game._id} />
                 <ListeningText camera={game.camera}/>
 
-                {game.say.length > 0 && <StateText hintText={game.say} img="/icon-text-bubble.png"/>}
-                {hintText.length > 0 && <StateText hintText={hintText} img="/light-bulb.png"/>}
+                {game.eyes.state === EyesInteractState.Found && <StateText hintText={game.say} img="/icon-text-bubble.png"/>}
+
+                <StateText hintText={hintText} img="/light-bulb.png"/>
 
                 {gameState === GameState.Finished && <SummaryBar game={game}/>}
 

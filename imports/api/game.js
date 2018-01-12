@@ -84,6 +84,7 @@ export function initialGame( name ) {
             listeningState: ListeningState.None,
             text: ''
         },
+        recordings: [],
         timesPaused: 0,
         secondsPaused: 0,
         questionAttempts: 0
