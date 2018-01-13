@@ -2,31 +2,48 @@ import React, { Component } from 'react';
 import { Game } from '../../api/game.js';
 
 class QuestionRow extends Component {
-    onQuestionChange(e) {
-        const { game, index } = this.props;
-        const key = `questions.${index}.q`;
-        const setValue = {};
-        setValue[ key ] = e.target.value;
+    constructor( props ) {
+        super( props );
 
-        Game.update({ _id: game._id }, { '$set': setValue });
+        this.onAsk = this.onAsk.bind( this );
+        this.onAnswer = this.onAnswer.bind( this );
     }
 
-    onAnswerChange(e) {
+    onQuestionChange( e ) {
         const { game, index } = this.props;
-        const key = `questions.${index}.a`;
+        const key = `questions.${index}.question`;
         const setValue = {};
         setValue[ key ] = e.target.value;
 
-        Game.update({ _id: game._id }, { '$set': setValue });
+        Game.update( { _id: game._id }, { '$set': setValue } );
     }
 
-    onHintChange(e) {
+    onAnswerChange( e ) {
         const { game, index } = this.props;
-        const key = `questions.${index}.h`;
+        const key = `questions.${index}.answer`;
         const setValue = {};
         setValue[ key ] = e.target.value;
 
-        Game.update({ _id: game._id }, { '$set': setValue });
+        Game.update( { _id: game._id }, { '$set': setValue } );
+    }
+
+    onRewardChange( e ) {
+        const { game, index } = this.props;
+        const key = `questions.${index}.reward`;
+        const setValue = {};
+        setValue[ key ] = e.target.value;
+
+        Game.update( { _id: game._id }, { '$set': setValue } );
+    }
+
+    onAsk() {
+        const { index } = this.props;
+        Meteor.call( 'ask', index )
+    }
+
+    onAnswer() {
+        const { index } = this.props;
+        Meteor.call( 'answer', index )
     }
 
     render() {
@@ -34,30 +51,48 @@ class QuestionRow extends Component {
 
         return (
             <div className="columns">
-                <div className="column is-4">
+                <div className="column is-3">
                     <div className="field">
                         <label className="label">Question {index + 1}</label>
                         <div className="control">
-                            <input value={question.q} onChange={this.onQuestionChange.bind(this)} className="input"
+                            <input value={question.question} onChange={this.onQuestionChange.bind( this )}
+                                   className="input"
                                    type="text"/>
                         </div>
                     </div>
                 </div>
-                <div className="column is-4">
+                <div className="column is-3">
                     <div className="field">
                         <label className="label">Answer {index + 1}</label>
                         <div className="control">
-                            <input value={question.a} onChange={this.onAnswerChange.bind(this)} className="input"
+                            <input value={question.answer} onChange={this.onAnswerChange.bind( this )} className="input"
                                    type="text"/>
                         </div>
                     </div>
                 </div>
-                <div className="column is-4">
+                <div className="column is-3">
                     <div className="field">
-                        <label className="label">Placeholder {index + 1}</label>
+                        <label className="label">Reward {index + 1}</label>
                         <div className="control">
-                            <input value={question.h} onChange={this.onHintChange.bind(this)} className="input"
+                            <input value={question.reward} onChange={this.onRewardChange.bind( this )} className="input"
                                    type="text"/>
+                        </div>
+                    </div>
+                </div>
+                <div className="column is-1">
+                    <div className="field">
+                        <label className="label">&nbsp;</label>
+                        <div className="control">
+                            {!question.asked && <button className="button is-primary" onClick={this.onAsk}>Ask</button>}
+                        </div>
+                    </div>
+                </div>
+                <div className="column is-1">
+                    <div className="field">
+                        <label className="label">&nbsp;</label>
+                        <div className="control">
+                            {!question.answered &&
+                            <button className="button is-info" onClick={this.onAnswer}>Answer</button>}
                         </div>
                     </div>
                 </div>
@@ -72,7 +107,7 @@ export default class Questions extends Component {
         const { game } = this.props;
         return (
             <div id="questions">
-                {game.questions.map((q, i) => <QuestionRow game={game} key={i} index={i} question={q}/>)}
+                {game.questions.map( ( q, i ) => <QuestionRow game={game} key={i} index={i} question={q}/> )}
             </div>
         );
     }

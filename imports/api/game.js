@@ -67,14 +67,9 @@ export function initialGame( name ) {
         hintText: '',
         say: '',
         questions: [
-            {
-                q: 'The youngest player must enter their birthday in the format mm/dd/yyyy. For example if your birthday is February 6, 1974, the you should enter "02/06/1974"',
-                a: '',
-                h: 'mm/dd/yyyy',
-                r: false
-            },
-            { q: '', a: '', h: '', r: false },
-            { q: '', a: '', h: '', r: false },
+            { question: '', answer: '', reward: '', asked: false, answered: false },
+            { question: '', answer: '', reward: '', asked: false, answered: false },
+            { question: '', answer: '', reward: '', asked: false, answered: false },
         ],
         eyes: {
             state: EyeState.NORMAL,

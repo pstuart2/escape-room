@@ -23,6 +23,8 @@ export default class Eyes extends Component {
             if ( eyes.interact === EyesInteractState.Hiding || eyes.interact === EyesInteractState.AfraidOfDark ) {
                 setHiddenEyesColor( this.scene );
                 animate( scene, eyes.state );
+            } else if(eyes.interact === EyesInteractState.Found) {
+                eyesVisibleTimer = setTimeout( () => getRandomLook(this.props.gameId), randomLookTime );
             }
         } );
     }
@@ -100,6 +102,27 @@ function getReturnState( eyeState ) {
     return false;
 }
 
+const looks = [
+    EyeState.EYES_DOWN,
+    EyeState.EYES_UP,
+    EyeState.EYES_LEFT,
+    EyeState.EYES_RIGHT,
+    EyeState.EYES_SURPRISED
+];
+
+function getRandomLook( gameId ) {
+    const randomLook = looks[ Math.floor( Math.random() * looks.length ) ];
+
+    Game.update( { _id: gameId }, { '$set': { 'eyes.state': randomLook } } );
+    setTimeout( function() {
+        Game.update( { _id: gameId }, { '$set': { 'eyes.state': EyeState.NORMAL } } );
+    }, 1500 );
+
+    eyesVisibleTimer = setTimeout(() => getRandomLook(gameId), randomLookTime );
+}
+
+const randomLookTime = Math.floor( Math.random() * 5000 ) + 8000;
+
 let eyesWaitingTimer = null,
     eyesVisibleTimer = null;
 
@@ -113,6 +136,9 @@ function handleInteractStateChange( gameId, eyes, prevEyes, scene ) {
         setEyesVisibleColor( scene );
         const returnAnimation = getReturnState( prevEyes.state );
         animate( scene, returnAnimation );
+
+        eyesVisibleTimer = setTimeout( () => getRandomLook(gameId), randomLookTime );
+
         return;
     } else if ( newState === EyesInteractState.Hiding ) {
         Game.update( { _id: gameId }, { '$set': { 'eyes.state': getRandomHideDirection() } } );
@@ -120,7 +146,10 @@ function handleInteractStateChange( gameId, eyes, prevEyes, scene ) {
         if ( eyesWaitingTimer ) clearTimeout( eyesWaitingTimer );
         eyesWaitingTimer = null;
         return;
-    } else if (newState === EyesInteractState.AfraidOfDark) {
+    } else if ( newState === EyesInteractState.AfraidOfDark ) {
+        if ( eyesVisibleTimer ) clearTimeout( eyesVisibleTimer );
+        eyesVisibleTimer = null;
+
         Game.update( { _id: gameId }, { '$set': { 'eyes.state': getRandomHideDirection() } } );
         setHiddenEyesColor( scene );
         return;

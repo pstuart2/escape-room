@@ -106,24 +106,13 @@ Meteor.methods( {
         runningGameId = null;
     },
 
-    answer( index, answer ) {
+    ask( index, answer ) {
+        HTTP.post( `${ApiServer}/command`, { data: { 'command': ':speech:', 'text': 'can you help' } } );
+    },
+
+    answer( index ) {
         const game = Game.findOne( { _id: runningGameId }, { fields: { questions: 1 } } );
-        console.log( `${index} - ${answer} [${game.questions[ index ].a}]` );
-
-        if ( game.questions[ index ].a.toLowerCase() === answer.toLowerCase() ) {
-            HTTP.post( `${ApiServer}/answer`, { data: { 'result': 'correct' } } );
-
-            const key = `questions.${index}.r`;
-            const setValue = {};
-            setValue[ key ] = getQuestionReward( index );
-
-            Game.update( { _id: runningGameId }, { '$set': setValue, '$inc': { questionAttempts: 1 } } );
-            return true;
-        }
-
-        HTTP.post( `${ApiServer}/answer`, { data: { 'result': 'wrong' } } );
-        Game.update( { _id: runningGameId }, { '$inc': { questionAttempts: 1 } } );
-        return false;
+        HTTP.post( `${ApiServer}/command`, { data: { 'command': ':speech:', 'text':  game.questions[ index ].answer} } );
     }
 } );
 
