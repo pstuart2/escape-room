@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { animate, EyeState, setUpAnimations } from '../../eyes/animations';
+import { animate, EyeState, getRandomHideDirection, setUpAnimations } from '../../eyes/animations';
 import { Color4, Engine, SceneLoader } from 'babylonjs';
 import { EyesInteractState, Game } from '../../api/game';
 
@@ -20,7 +20,7 @@ export default class Eyes extends Component {
         renderEyes( this.canvas, this.engine, ( scene ) => {
             this.scene = scene;
             const { eyes } = this.props;
-            if ( eyes.interact === EyesInteractState.Hiding ) {
+            if ( eyes.interact === EyesInteractState.Hiding || eyes.interact === EyesInteractState.AfraidOfDark ) {
                 setHiddenEyesColor( this.scene );
                 animate( scene, eyes.state );
             }
@@ -100,16 +100,13 @@ function getReturnState( eyeState ) {
     return false;
 }
 
-let eyesWaitingTimer = null;
+let eyesWaitingTimer = null,
+    eyesVisibleTimer = null;
 
 function handleInteractStateChange( gameId, eyes, prevEyes, scene ) {
     const prevState = prevEyes.interact;
     const newState = eyes.interact;
 
-    console.log( 'prevState', prevState );
-    console.log( 'newState', newState );
-
-    if ( prevState === EyesInteractState.Found ) return;
     if ( prevState === newState ) return;
 
     if ( newState === EyesInteractState.Found ) {
@@ -123,7 +120,13 @@ function handleInteractStateChange( gameId, eyes, prevEyes, scene ) {
         if ( eyesWaitingTimer ) clearTimeout( eyesWaitingTimer );
         eyesWaitingTimer = null;
         return;
+    } else if (newState === EyesInteractState.AfraidOfDark) {
+        Game.update( { _id: gameId }, { '$set': { 'eyes.state': getRandomHideDirection() } } );
+        setHiddenEyesColor( scene );
+        return;
     }
+
+    if ( prevState === EyesInteractState.Found ) return;
 
     switch ( prevState ) {
         case EyesInteractState.Hiding:
@@ -169,16 +172,6 @@ function setEyesVisibleColor( scene ) {
 
 function setHiddenEyesColor( scene ) {
     scene.clearColor = hexToColor4( '#000000' );
-}
-
-const randomNumberBetween0and1 = Math.floor( Math.random() * 2 );
-
-function getRandomHideDirection() {
-    if ( randomNumberBetween0and1 === 0 ) {
-        return EyeState.HIDE_LEFT;
-    }
-
-    return EyeState.HIDE_RIGHT;
 }
 
 const hexToColor4 = ( hex ) => Color4.FromHexString( `${hex}ff` );

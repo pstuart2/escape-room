@@ -14,7 +14,7 @@ export default class ListeningText extends Component {
         const state = this.props.camera.listeningState;
         switch ( state ) {
             case ListeningState.Listening: {
-                return "/icon/listening.png";
+                return "/icon-listening.png";
             }
 
             case ListeningState.Fetching: {

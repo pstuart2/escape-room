@@ -49,7 +49,6 @@ class TimerAndSecret extends Component {
             return <StartingTimer game={game}/>
         }
 
-
         return (
             <div id="secret">
                 <nav className="level topbar">
@@ -79,14 +78,14 @@ class TimerAndSecret extends Component {
                     </div>
                 </nav>
 
-                <Eyes eyes={game.eyes} gameId={game._id} />
-                <ListeningText camera={game.camera}/>
+                {gameState === GameState.Finished ? <SummaryBar game={game}/> : <Eyes eyes={game.eyes} gameId={game._id} />}
+                {game.eyes.interact !== EyesInteractState.AfraidOfDark && <ListeningText camera={game.camera}/>}
 
-                {game.eyes.state === EyesInteractState.Found && <StateText hintText={game.say} img="/icon-text-bubble.png"/>}
+                <StateText hintText={game.say} img="/icon-text-bubble.png"/>
 
                 <StateText hintText={hintText} img="/light-bulb.png"/>
 
-                {gameState === GameState.Finished && <SummaryBar game={game}/>}
+
 
             </div>
         );

@@ -15,18 +15,18 @@ export default class StartingTimer extends Component {
             <div id="starting">
                 <div className="columns">
                     <div className="column has-text-centered">
-                        <div className="heading">Players</div>
-                        <div className="title">
-                            {game.players.map( ( p, i ) => <Player key={i} index={i} player={p}/> )}
-                        </div>
-                    </div>
-
-                    <div className="column has-text-centered">
                         <div>
                             <div className="heading">Starting In...</div>
                             <div className="title startingIn">{game.startingIn}</div>
                         </div>
                         <div className="instructions">{game.instructions}</div>
+                    </div>
+
+                    <div className="column has-text-centered">
+                        <div className="heading">Players</div>
+                        <div className="title">
+                            {game.players.map( ( p, i ) => <Player key={i} index={i} player={p}/> )}
+                        </div>
                     </div>
                 </div>
             </div>

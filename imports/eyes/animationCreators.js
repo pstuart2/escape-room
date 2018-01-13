@@ -7,7 +7,7 @@ import {
 } from 'babylonjs';
 
 const BrowUpDistance = 0.10;
-const HideDistance = 13.0;
+const HideDistance = 15.0;
 
 export function createLookDown(rightEye, leftEye, rightBrow, leftBrow) {
     const animations = [];

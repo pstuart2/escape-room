@@ -14,7 +14,7 @@ html, body {
 
 #renderCanvas {
   width: 100%;
-  height: calc(100vh - 256px);
+  height: calc(100vh - 280px);
   touch-action: none;
 }
 
@@ -23,11 +23,17 @@ html, body {
 }
 
 #summary {
+  height: calc(100vh - 280px);
+  #recordings {
+    font-size: 20px;
+    padding-left: 10px;
+    padding-right: 100px;
+  }
   h1 {
     color: $almostWhite;
     margin-top: 40px;
     margin-bottom: 40px;
-    font-size: 450px;
+    font-size: 200px;
   }
 }
 

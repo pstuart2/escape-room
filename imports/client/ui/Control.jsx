@@ -219,7 +219,7 @@ class Control extends Component {
                 <div className="field">
                     <label className="label">Instructions</label>
                     <div className="control">
-                        <textarea className="input" onChange={this.onInstructionsChange.bind( this )}>{game.instructions}</textarea>
+                        <textarea className="input" value={game.instructions} onChange={this.onInstructionsChange.bind( this )} />
                     </div>
                 </div>
 

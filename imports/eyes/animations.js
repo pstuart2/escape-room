@@ -31,6 +31,18 @@ export const EyeState = {
     NO: 17
 };
 
+
+const randomNumberBetween0and1 = Math.floor( Math.random() * 2 );
+
+export function getRandomHideDirection() {
+    if ( randomNumberBetween0and1 === 0 ) {
+        return EyeState.HIDE_LEFT;
+    }
+
+    return EyeState.HIDE_RIGHT;
+}
+
+
 const animations = [];
 
 export function setUpAnimations( scene ) {

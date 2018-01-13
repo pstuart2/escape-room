@@ -16,7 +16,8 @@ export const EyesInteractState = {
     Hiding: 0,
     Waiting: 1,
     Peeking: 2,
-    Found: 3
+    Found: 3,
+    AfraidOfDark: 4,
 };
 
 export const ListeningState = {

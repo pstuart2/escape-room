@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { EyesInteractState, Game, GameState, getQuestionReward } from '../imports/api/game';
 import { HTTP } from 'meteor/http'
-import { EyeState } from '../imports/eyes/animations';
+import { EyeState, getRandomHideDirection } from '../imports/eyes/animations';
 import moment from 'moment';
 
 const ApiServer = 'http://localhost:8080';
@@ -74,10 +74,10 @@ Meteor.methods( {
         Game.update( { _id }, {
             '$set':
                 {
-                    startingIn: 10,
+                    startingIn: 20,
                     state: GameState.Starting,
                     eyes: {
-                        state: EyeState.NORMAL,
+                        state: getRandomHideDirection(),
                         interact: EyesInteractState.Hiding
                     }
                 }
