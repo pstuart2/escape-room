@@ -115,7 +115,10 @@ function getRandomLook( gameId ) {
 
     Game.update( { _id: gameId }, { '$set': { 'eyes.state': randomLook } } );
     setTimeout( function() {
-        Game.update( { _id: gameId }, { '$set': { 'eyes.state': EyeState.NORMAL } } );
+        const game = Game.findOne({_id: gameId});
+        if (game.eyes.interact === EyesInteractState.Found) {
+            Game.update( { _id: gameId }, { '$set': { 'eyes.state': EyeState.NORMAL } } );
+        }
     }, 1500 );
 
     eyesVisibleTimer = setTimeout(() => getRandomLook(gameId), randomLookTime );
