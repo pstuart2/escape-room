@@ -1,13 +1,11 @@
 import React from 'react';
-import Hello from './Hello.jsx';
-import Info from './Info.jsx';
+import {Link} from "react-router-dom";
 
-const App = () => (
+export const App = () => (
   <div>
-    <h1>Welcome to Meteor!</h1>
-    <Hello />
-    <Info />
+    <h1>Welcome to Escape Room</h1>
+    <ul>
+        <li><Link to="/dashboard">Dashboard</Link></li>
+    </ul>
   </div>
 );
-
-export default App;
