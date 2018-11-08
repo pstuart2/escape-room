@@ -6,18 +6,11 @@ import * as R from 'ramda'
 import { DateTime } from 'luxon'
 
 export class AppComponent extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      name: '',
-    }
-
-    this.createGame = this.createGame.bind(this)
-    this.changeName = this.changeName.bind(this)
+  state = {
+    name: '',
   }
 
-  createGame(e) {
+  createGame = (e) => {
     e.preventDefault()
 
     const { name } = this.state
@@ -28,7 +21,7 @@ export class AppComponent extends Component {
     this.setState({ name: '' })
   }
 
-  changeName(e) {
+  changeName = (e) => {
     this.setState({ name: e.target.value })
   }
 
