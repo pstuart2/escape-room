@@ -25,13 +25,12 @@ export class AppComponent extends Component<AppProps> {
 
     const { name } = this.state
 
-    Games.insert({ name, createdAt: DateTime.local().toJSDate() })
+    Games.insert({ name, createdAt: DateTime.local().toJSDate(), players: [] })
 
     this.setState({ name: '' })
   }
 
-  changeName = (e: React.FormEvent<HTMLInputElement>) => {
-    console.log(e)
+  changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ name: e.currentTarget.value })
   }
 
@@ -47,19 +46,28 @@ export class AppComponent extends Component<AppProps> {
           </Link>
         </div>
         <form onSubmit={this.createGame}>
-          <div className="form-group">
-            <label htmlFor="gameName">Game Name</label>
-            <input type="text" onChange={this.changeName} value={name} className="form-control" id="gameName" />
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Game name"
+              value={name}
+              onChange={this.changeName}
+            />
+            <div className="input-group-append">
+              <button className="btn btn-success" type="submit">
+                Create
+              </button>
+            </div>
           </div>
-          <button type="submit" className="btn btn-success">
-            Create
-          </button>
         </form>
         <h3>Games</h3>
 
         <ul>
           {games.map(g => (
-            <li key={g._id}>{g.name}</li>
+            <li key={g._id}>
+              <Link to={`/${g._id}`}>{g.name}</Link>
+            </li>
           ))}
         </ul>
       </div>
