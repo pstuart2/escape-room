@@ -8,6 +8,23 @@ export interface GameListItem {
   name: string
   createdAt: Date
   players: PlayerList
+  state: GameState
+  time: RunningInfo
+}
+
+export enum GameState {
+  Pending = 0,
+  Starting = 1,
+  Running = 2,
+  Paused = 3,
+  Finished = 4,
+}
+
+export interface RunningInfo {
+  startedAt: Date
+  startingInSeconds: number
+  gameRunningSeconds: number
+  timesPaused: number
 }
 
 export type GameList = GameListItem[]

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
-import { GameList, Games } from '../api/games'
+import { GameList, Games, GameState } from '../api/games'
 import * as R from 'ramda'
 import { DateTime } from 'luxon'
 import { Meteor } from 'meteor/meteor'
@@ -25,7 +25,18 @@ export class AppComponent extends Component<AppProps> {
 
     const { name } = this.state
 
-    Games.insert({ name, createdAt: DateTime.local().toJSDate(), players: [] })
+    Games.insert({
+      name,
+      createdAt: DateTime.local().toJSDate(),
+      players: [],
+      state: GameState.Pending,
+      time: {
+        startedAt: DateTime.local().toJSDate(),
+        startingInSeconds: 0,
+        gameRunningSeconds: 0,
+        timesPaused: 0,
+      },
+    })
 
     this.setState({ name: '' })
   }

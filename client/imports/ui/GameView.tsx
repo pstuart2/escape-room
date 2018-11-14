@@ -5,9 +5,9 @@ import { Meteor } from 'meteor/meteor'
 import { Game, Games } from '../api/games'
 import { RouteComponentProps } from 'react-router'
 import { IdRoute } from '../api/models'
-import * as uniqid from 'uniqid'
 import { TabNav } from './components/TabNav'
 import { Link } from 'react-router-dom'
+import { ControlButtons } from './ControlButtons'
 
 interface GameViewTrackerProps {
   game: Game
@@ -37,7 +37,10 @@ export class GameViewComponent extends Component<GameViewProps> {
         <TabNav gameId={game._id} active="game" />
         <div className="tab-content" id="nav-tabContent">
           <div className="button-bar">
-            <button className="btn btn-success">Start</button>
+            <div className="float-right">
+              <ControlButtons game={game} />
+            </div>
+
             <Link to={`${game._id}/dashboard`} className="btn btn-dark">
               Dashboard
             </Link>
