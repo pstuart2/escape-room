@@ -40,11 +40,6 @@ export class AppComponent extends Component<AppProps> {
 
     return (
       <div id="app" className="container-fluid">
-        <div>
-          <Link to="/dashboard" className="btn btn-dark">
-            Dashboard
-          </Link>
-        </div>
         <form onSubmit={this.createGame}>
           <div className="input-group mb-3">
             <input

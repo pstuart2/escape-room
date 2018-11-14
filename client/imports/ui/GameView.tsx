@@ -7,6 +7,7 @@ import { RouteComponentProps } from 'react-router'
 import { IdRoute } from '../api/models'
 import * as uniqid from 'uniqid'
 import { TabNav } from './components/TabNav'
+import { Link } from 'react-router-dom'
 
 interface GameViewTrackerProps {
   game: Game
@@ -21,17 +22,8 @@ type GameViewOwnProps = RouteComponentProps<IdRoute>
 type GameViewProps = GameViewOwnProps & GameViewTrackerProps
 
 export class GameViewComponent extends Component<GameViewProps> {
-  state: GameViewState = {
-    name: '',
-  }
-
-  changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ name: e.currentTarget.value })
-  }
-
   render() {
     const { game } = this.props
-    const { name } = this.state
 
     if (!game) {
       return null
@@ -44,7 +36,12 @@ export class GameViewComponent extends Component<GameViewProps> {
         </div>
         <TabNav gameId={game._id} active="game" />
         <div className="tab-content" id="nav-tabContent">
-          game stuff
+          <div className="button-bar">
+            <button className="btn btn-success">Start</button>
+            <Link to={`${game._id}/dashboard`} className="btn btn-dark">
+              Dashboard
+            </Link>
+          </div>
         </div>
       </div>
     )
