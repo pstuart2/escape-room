@@ -20,3 +20,11 @@ $darker: #1a1a1a;
   overflow: hidden;
   height: 100vh;
 }
+
+#players {
+  #playerGrid {
+    .card {
+      margin-bottom: 20px;
+    }
+  }
+}

@@ -4,9 +4,12 @@ import { withTracker } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
 import { Game, Games } from '../api/games'
 import { RouteComponentProps } from 'react-router'
-import { IdRoute } from '../api/models'
+import { Id, IdRoute } from '../api/models'
 import * as uniqid from 'uniqid'
 import { TabNav } from './components/TabNav'
+import { PlayerCard } from './PlayerCard'
+import { Simulate } from 'react-dom/test-utils'
+import play = Simulate.play
 
 interface PlayersTrackerProps {
   game: Game
@@ -41,6 +44,12 @@ export class PlayersComponent extends Component<PlayersProps> {
     this.setState({ name: '' })
   }
 
+  deletePlayer = (playerId: Id) => {
+    const { game } = this.props
+
+    Games.update({ _id: game._id }, { $pull: { players: { _id: playerId } } })
+  }
+
   changeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ name: e.currentTarget.value })
   }
@@ -54,7 +63,7 @@ export class PlayersComponent extends Component<PlayersProps> {
     }
 
     return (
-      <div id="game" className="container-fluid">
+      <div id="players" className="container-fluid">
         <div className="alert alert-secondary">
           <h1 className="display-4">Game: {game.name}</h1>
         </div>
@@ -76,6 +85,11 @@ export class PlayersComponent extends Component<PlayersProps> {
               </div>
             </div>
           </form>
+          <div id="playerGrid" className="row">
+            {game.players.map(p => (
+              <PlayerCard key={p._id} player={p} onDelete={this.deletePlayer} />
+            ))}
+          </div>
         </div>
       </div>
     )
