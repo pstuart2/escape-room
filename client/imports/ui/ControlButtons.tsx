@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Component } from 'react'
+import { PureComponent } from 'react'
 import { GameListItem, GameState } from '../api/games'
 import { Meteor } from 'meteor/meteor'
 
@@ -7,7 +7,7 @@ export interface ControlButtonsProps {
   game: GameListItem
 }
 
-export class PendingButtons extends Component<ControlButtonsProps> {
+export class PendingButtons extends PureComponent<ControlButtonsProps> {
   onStart = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
@@ -24,14 +24,14 @@ export class PendingButtons extends Component<ControlButtonsProps> {
     return (
       <>
         <button className="btn btn-success" onClick={this.onStart} disabled={game.state === GameState.Starting}>
-          Start
+          {game.state === GameState.Pending ? 'Start' : `Starting...${game.time.startingInSeconds}`}
         </button>
       </>
     )
   }
 }
 
-export class RunningButtons extends Component<ControlButtonsProps> {
+export class RunningButtons extends PureComponent<ControlButtonsProps> {
   onPause = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
@@ -85,7 +85,7 @@ export class RunningButtons extends Component<ControlButtonsProps> {
   }
 }
 
-export class ControlButtons extends Component<ControlButtonsProps> {
+export class ControlButtons extends PureComponent<ControlButtonsProps> {
   render() {
     const { game } = this.props
     switch (game.state) {

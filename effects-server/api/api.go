@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/sirupsen/logrus"
 
@@ -55,7 +54,7 @@ func db(dbSession *mgo.Session) gin.HandlerFunc {
 func start(c *gin.Context) {
 	id, games := getGamePost(c)
 
-	game := updateGame(games, id, bson.M{"$set": bson.M{"state": Starting}})
+	game := updateGame(games, id, bson.M{"$set": bson.M{"state": Starting, "time.startingInSeconds": 10}})
 
 	if game == nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})
@@ -63,13 +62,6 @@ func start(c *gin.Context) {
 	}
 
 	startTimer(id)
-
-	timeout := time.After(5 * time.Second)
-	select {
-	case <-timeout:
-		updateGame(games, id, bson.M{"$set": bson.M{"state": Running}})
-		return
-	}
 
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game started: %s", game.Name)})
 }

@@ -46,6 +46,9 @@ func gameTick(id string) {
 	game := findById(games, id)
 
 	switch game.State {
+	case Starting:
+		startingTick(games, game)
+		break
 	case Paused:
 		pauseTick(games, game)
 		break
@@ -55,12 +58,23 @@ func gameTick(id string) {
 	}
 }
 
-func pauseTick(games *mgo.Collection, game *Game) {
-	log.Infof("pauseTick for game %s", game.Name)
-	game = updateGame(games, game.ID, bson.M{"$inc": bson.M{"time.pausedSeconds": 1}})
+func startingTick(games *mgo.Collection, game *Game) {
+	log.Infof("startingTick for game %s", game.Name)
+
+	update := bson.M{"$inc": bson.M{"time.startingInSeconds": -1}}
+	if game.Time.StartingInSeconds == 1 {
+		update = bson.M{"$inc": bson.M{"time.startingInSeconds": -1}, "$set": bson.M{"state": Running}}
+	}
+
+	game = updateGame(games, game.ID, update)
 }
 
 func runningTick(games *mgo.Collection, game *Game) {
 	log.Infof("runningTick for game %s", game.Name)
 	game = updateGame(games, game.ID, bson.M{"$inc": bson.M{"time.gameRunningSeconds": 1}})
+}
+
+func pauseTick(games *mgo.Collection, game *Game) {
+	log.Infof("pauseTick for game %s", game.Name)
+	game = updateGame(games, game.ID, bson.M{"$inc": bson.M{"time.pausedSeconds": 1}})
 }

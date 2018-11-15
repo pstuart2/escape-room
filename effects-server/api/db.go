@@ -29,7 +29,7 @@ type Game struct {
 
 type RunningInfo struct {
 	StartedAt          time.Time `bson:"startedAt" json:"startedAt"`
-	StartingInSeconds  uint32    `bson:"startInSeconds" json:"startingInSeconds"`
+	StartingInSeconds  uint32    `bson:"startingInSeconds" json:"startingInSeconds"`
 	GameRunningSeconds uint32    `bson:"gameRunningSeconds" json:"gameRunningSeconds"`
 	PausedSeconds      uint32    `bson:"pausedSeconds" json:"pausedSeconds"`
 }
