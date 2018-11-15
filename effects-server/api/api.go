@@ -5,13 +5,24 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/globalsign/mgo/bson"
 
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 )
 
+var masterSession *mgo.Session
+var stopTimer chan bool
+var log *logrus.Entry
+
 func SetUp(dbSession *mgo.Session) *gin.Engine {
+	log = logrus.WithField("component", "api")
+
+	masterSession = dbSession
+	stopTimer = make(chan bool)
+
 	r := gin.Default()
 
 	r.Use(db(dbSession))
@@ -20,6 +31,8 @@ func SetUp(dbSession *mgo.Session) *gin.Engine {
 	r.POST("/pause", pause)
 	r.POST("/resume", resume)
 	r.POST("/stop", stop)
+
+	checkForRunningGame()
 
 	return r
 }
@@ -40,7 +53,6 @@ func db(dbSession *mgo.Session) gin.HandlerFunc {
 }
 
 func start(c *gin.Context) {
-	// log := logrus.WithField("component", "api/start")
 	id, games := getGamePost(c)
 
 	game := updateGame(games, id, bson.M{"$set": bson.M{"state": Starting}})
@@ -50,7 +62,8 @@ func start(c *gin.Context) {
 		return
 	}
 
-	// TODO: Add the tick timer and starting timer.
+	startTimer(id)
+
 	timeout := time.After(5 * time.Second)
 	select {
 	case <-timeout:
@@ -96,6 +109,8 @@ func stop(c *gin.Context) {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})
 		return
 	}
+
+	stopTimer <- true
 
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game stopped: %s", game.Name)})
 }

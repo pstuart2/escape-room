@@ -24,7 +24,7 @@ export interface RunningInfo {
   startedAt: Date
   startingInSeconds: number
   gameRunningSeconds: number
-  timesPaused: number
+  pausedSeconds: number
 }
 
 export type GameList = GameListItem[]
@@ -37,3 +37,20 @@ export interface Player {
 }
 
 export type PlayerList = Player[]
+
+export const createGame = (name: string, d: Date) => {
+  const players: PlayerList = []
+
+  return {
+    name,
+    createdAt: d,
+    players,
+    state: GameState.Pending,
+    time: {
+      startedAt: d,
+      startingInSeconds: 0,
+      gameRunningSeconds: 0,
+      pausedSeconds: 0,
+    },
+  }
+}
