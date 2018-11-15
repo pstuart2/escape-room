@@ -20,11 +20,11 @@ const (
 )
 
 type Game struct {
-	ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-	CreatedAt time.Time     `bson:"createdAt" json:"createdAt"`
-	Name      string        `bson:"name" json:"name"`
-	State     GameState     `bson:"state" json:"state"`
-	Time      RunningInfo   `bson:"time" json:"time"`
+	ID        string      `bson:"_id,omitempty" json:"id"`
+	CreatedAt time.Time   `bson:"createdAt" json:"createdAt"`
+	Name      string      `bson:"name" json:"name"`
+	State     GameState   `bson:"state" json:"state"`
+	Time      RunningInfo `bson:"time" json:"time"`
 }
 
 type RunningInfo struct {
@@ -49,6 +49,22 @@ func findById(games *mgo.Collection, id string) *Game {
 		"time":      1,
 	}).One(&game); err != nil {
 		logrus.Errorf("Failed to get game: %v", err)
+		return nil
+	}
+
+	return &game
+}
+
+func updateGame(games *mgo.Collection, id string, update interface{}) *Game {
+	change := mgo.Change{
+		Update:    update,
+		Upsert:    false,
+		ReturnNew: true,
+	}
+	var game Game
+
+	_, err := games.Find(bson.M{"_id": id}).Apply(change, &game)
+	if err != nil {
 		return nil
 	}
 

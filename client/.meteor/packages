@@ -20,3 +20,4 @@ react-meteor-data       # React higher-order component for reactively tracking M
 fourseven:scss
 seba:minifiers-autoprefixer
 barbatus:typescript
+http

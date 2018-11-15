@@ -42,12 +42,12 @@ export class RunningButtons extends Component<ControlButtonsProps> {
     })
   }
 
-  onUnPause = (e: React.MouseEvent<HTMLButtonElement>) => {
+  onResume = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
 
     const { game } = this.props
 
-    Meteor.call('unPause', game._id, (e: any) => {
+    Meteor.call('resume', game._id, (e: any) => {
       console.log('error', e)
     })
   }
@@ -68,12 +68,12 @@ export class RunningButtons extends Component<ControlButtonsProps> {
     return (
       <>
         {game.state === GameState.Paused ? (
-          <button className="btn btn-warning" onClick={this.onPause}>
-            Pause
+          <button className="btn btn-warning" onClick={this.onResume}>
+            Resume
           </button>
         ) : (
-          <button className="btn btn-warning" onClick={this.onUnPause}>
-            UnPause
+          <button className="btn btn-warning" onClick={this.onPause}>
+            Pause
           </button>
         )}
 
