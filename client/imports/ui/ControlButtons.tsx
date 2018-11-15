@@ -14,7 +14,9 @@ export class PendingButtons extends PureComponent<ControlButtonsProps> {
     const { game } = this.props
 
     Meteor.call('start', game._id, (e: any) => {
-      console.log('error', e)
+      if (e) {
+        console.error('start error', e)
+      }
     })
   }
 
@@ -38,7 +40,9 @@ export class RunningButtons extends PureComponent<ControlButtonsProps> {
     const { game } = this.props
 
     Meteor.call('pause', game._id, (e: any) => {
-      console.log('error', e)
+      if (e) {
+        console.error('pause error', e)
+      }
     })
   }
 
@@ -48,7 +52,9 @@ export class RunningButtons extends PureComponent<ControlButtonsProps> {
     const { game } = this.props
 
     Meteor.call('resume', game._id, (e: any) => {
-      console.log('error', e)
+      if (e) {
+        console.error('resume error', e)
+      }
     })
   }
 
@@ -58,7 +64,9 @@ export class RunningButtons extends PureComponent<ControlButtonsProps> {
     const { game } = this.props
 
     Meteor.call('stop', game._id, (e: any) => {
-      console.log('error', e)
+      if (e) {
+        console.error('stop error', e)
+      }
     })
   }
 
