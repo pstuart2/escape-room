@@ -40,7 +40,7 @@ export class GameRoutesComponent extends Component<GameRoutesProps> {
           </div>
           <h1>Game: {game.name}</h1>
         </div>
-        <TabNav gameId={game._id} active={tab} />
+        <TabNav game={game} active={tab} />
         <Switch>
           <Route exact path="/:id/players" component={Players} game={game} />
           <Route exact path="/:id" component={GameView} game={game} />

@@ -9,7 +9,7 @@ import (
 	"github.com/globalsign/mgo"
 )
 
-func checkForRunningGame() {
+func checkAndResumeRunningGame() {
 	db := masterSession.Copy()
 	defer db.Close()
 

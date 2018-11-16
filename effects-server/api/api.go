@@ -32,7 +32,7 @@ func SetUp(dbSession *mgo.Session) *gin.Engine {
 	r.POST("/resume", resume)
 	r.POST("/stop", stop)
 
-	checkForRunningGame()
+	checkAndResumeRunningGame()
 
 	return r
 }
@@ -55,7 +55,13 @@ func db(dbSession *mgo.Session) gin.HandlerFunc {
 func start(c *gin.Context) {
 	id, games := getGamePost(c)
 
-	g := game.Update(games, id, bson.M{"$set": bson.M{"state": game.Starting, "time.startingInSeconds": 10}})
+	runningGame := game.FindRunning(games)
+	if runningGame != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Game '%s' is already running", runningGame.Name)})
+		return
+	}
+
+	g := game.Update(games, id, game.Pending, bson.M{"$set": bson.M{"state": game.Starting, "time.startingInSeconds": 10}})
 
 	if g == nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})
@@ -72,7 +78,7 @@ func start(c *gin.Context) {
 func pause(c *gin.Context) {
 	id, games := getGamePost(c)
 
-	g := game.Update(games, id, bson.M{"$set": bson.M{"state": game.Paused}})
+	g := game.Update(games, id, game.Running, bson.M{"$set": bson.M{"state": game.Paused}})
 
 	if g == nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})
@@ -87,7 +93,7 @@ func pause(c *gin.Context) {
 func resume(c *gin.Context) {
 	id, games := getGamePost(c)
 
-	g := game.Update(games, id, bson.M{"$set": bson.M{"state": game.Running}})
+	g := game.Update(games, id, game.Paused, bson.M{"$set": bson.M{"state": game.Running}})
 
 	if g == nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})
@@ -102,7 +108,7 @@ func resume(c *gin.Context) {
 func stop(c *gin.Context) {
 	id, games := getGamePost(c)
 
-	g := game.Update(games, id, bson.M{"$set": bson.M{"state": game.Finished}})
+	g := game.Update(games, id, game.Running, bson.M{"$set": bson.M{"state": game.Finished}})
 
 	if g == nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})

@@ -8,6 +8,6 @@ export interface CustomGameFieldsProps {
 
 export class CustomGameFields extends Component<CustomGameFieldsProps> {
   render() {
-    return <h1>CustomGameFields</h1>
+    return <>...you can customize this game area...</>
   }
 }

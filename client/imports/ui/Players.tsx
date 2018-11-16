@@ -84,7 +84,7 @@ export class PlayersComponent extends Component<PlayersProps> {
         </form>
         <div id="playerGrid" className="row">
           {game.players.map(p => (
-            <PlayerCard key={p._id} player={p} onDelete={this.deletePlayer} />
+            <PlayerCard key={p._id} game={game} player={p} onDelete={this.deletePlayer} />
           ))}
         </div>
       </div>

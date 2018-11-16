@@ -63,7 +63,7 @@ func FindRunning(games *mgo.Collection) *Game {
 	return &game
 }
 
-func Update(games *mgo.Collection, id string, update interface{}) *Game {
+func Update(games *mgo.Collection, id string, expectedState GameState, update interface{}) *Game {
 	change := mgo.Change{
 		Update:    update,
 		Upsert:    false,
@@ -71,7 +71,7 @@ func Update(games *mgo.Collection, id string, update interface{}) *Game {
 	}
 	var game Game
 
-	_, err := games.Find(bson.M{"_id": id}).Apply(change, &game)
+	_, err := games.Find(bson.M{"_id": id, "state": expectedState}).Apply(change, &game)
 	if err != nil {
 		return nil
 	}

@@ -9,6 +9,6 @@ export class CustomPlayerFields extends Component<CustomPlayerFieldsProps> {
   }
 
   render() {
-    return <></>
+    return <>...you can add custom player fields...</>
   }
 }
