@@ -17,7 +17,7 @@ export class PlayerCard extends Component<PlayerCardProps> {
   }
 
   render() {
-    const { player, onDelete } = this.props
+    const { player } = this.props
     return (
       <div className="col-sm-3">
         <div className="card">

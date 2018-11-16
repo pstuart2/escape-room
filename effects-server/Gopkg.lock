@@ -3,6 +3,18 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:ed101dd3bb09fce0cb4aae1a932465dd63e04f2ba1999c8962e74132a592add1"
+  name = "github.com/faiface/beep"
+  packages = [
+    ".",
+    "speaker",
+    "wav",
+  ]
+  pruneopts = "UT"
+  revision = "186a1b19424c83e881e07f0565466a27325c39f9"
+
+[[projects]]
+  branch = "master"
   digest = "1:36fe9527deed01d2a317617e59304eb2c4ce9f8a24115bcc5c2e37b3aee5bae4"
   name = "github.com/gin-contrib/sse"
   packages = ["."]
@@ -43,6 +55,30 @@
   pruneopts = "UT"
   revision = "aa810b61a9c79d51363740d207bb46cf8e620ed5"
   version = "v1.2.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:f14d1b50e0075fb00177f12a96dd7addf93d1e2883c25befd17285b779549795"
+  name = "github.com/gopherjs/gopherjs"
+  packages = ["js"]
+  pruneopts = "UT"
+  revision = "d547d1d9531ed93dbdebcbff7f83e7c876a1e0ee"
+
+[[projects]]
+  digest = "1:0b226f71747698cd3b03156781c849c3df46e229eef5c3682e182558cf34e8f0"
+  name = "github.com/gopherjs/gopherwasm"
+  packages = ["js"]
+  pruneopts = "UT"
+  revision = "b0e1786f520333e4546f02930c5ca8a929b38841"
+  version = "v1.0.1"
+
+[[projects]]
+  digest = "1:7dbca992a0baa4051dbca01d73ef7a790b8838f159ddbabace2657b81aeafc43"
+  name = "github.com/hajimehoshi/oto"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "3a9bb05c78a0583c0f5a6c041eeb05a6ceec8ef9"
+  version = "v0.2.1"
 
 [[projects]]
   branch = "master"
@@ -104,6 +140,14 @@
   version = "1.0.1"
 
 [[projects]]
+  digest = "1:40e195917a951a8bf867cd05de2a46aaf1806c50cf92eebf4c16f78cd196f747"
+  name = "github.com/pkg/errors"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "645ef00459ed84a119197bfb8d8205042c6df63d"
+  version = "v0.8.0"
+
+[[projects]]
   digest = "1:69b1cc331fca23d702bd72f860c6a647afd0aa9fcbc1d0659b1365e26546dd70"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
@@ -126,6 +170,51 @@
   packages = ["ssh/terminal"]
   pruneopts = "UT"
   revision = "3d3f9f413869b949e48070b5bc593aa22cc2b8f2"
+
+[[projects]]
+  branch = "master"
+  digest = "1:991ca5370801d648b645d81502f5cbeac3e57f333fbf99303adeb378e99ba956"
+  name = "golang.org/x/exp"
+  packages = [
+    "shiny/driver/gldriver",
+    "shiny/driver/internal/drawer",
+    "shiny/driver/internal/errscreen",
+    "shiny/driver/internal/event",
+    "shiny/driver/internal/lifecycler",
+    "shiny/driver/internal/win32",
+    "shiny/driver/internal/x11key",
+    "shiny/screen",
+  ]
+  pruneopts = "UT"
+  revision = "a3060d491354240eda536d676ced8bb702018b7e"
+
+[[projects]]
+  branch = "master"
+  digest = "1:b92d5f74778f4766055011db9abc4bba54edbe5e690a544e6dbfe4dd90824719"
+  name = "golang.org/x/image"
+  packages = ["math/f64"]
+  pruneopts = "UT"
+  revision = "d9c2484c482e024a5de5ea73d456fb873fb7e8ac"
+
+[[projects]]
+  branch = "master"
+  digest = "1:de68f712f85c8662d006696663ddcbb479c00328c101b453d5a6ff3bff1b62b6"
+  name = "golang.org/x/mobile"
+  packages = [
+    "app",
+    "app/internal/callfn",
+    "event/key",
+    "event/lifecycle",
+    "event/mouse",
+    "event/paint",
+    "event/size",
+    "event/touch",
+    "geom",
+    "gl",
+    "internal/mobileinit",
+  ]
+  pruneopts = "UT"
+  revision = "a27dd33d354d004b2de14a791df5af8a00f68b8e"
 
 [[projects]]
   branch = "master"
@@ -158,8 +247,12 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/faiface/beep",
+    "github.com/faiface/beep/speaker",
+    "github.com/faiface/beep/wav",
     "github.com/gin-gonic/gin",
     "github.com/globalsign/mgo",
+    "github.com/globalsign/mgo/bson",
     "github.com/ian-kent/gofigure",
     "github.com/sirupsen/logrus",
   ]
