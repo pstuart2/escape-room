@@ -1,6 +1,7 @@
 package api
 
 import (
+	"escape-room/effects-server/game"
 	"fmt"
 	"net/http"
 
@@ -31,7 +32,7 @@ func SetUp(dbSession *mgo.Session) *gin.Engine {
 	r.POST("/resume", resume)
 	r.POST("/stop", stop)
 
-	checkForRunningGame()
+	checkAndResumeRunningGame()
 
 	return r
 }
@@ -54,57 +55,71 @@ func db(dbSession *mgo.Session) gin.HandlerFunc {
 func start(c *gin.Context) {
 	id, games := getGamePost(c)
 
-	game := updateGame(games, id, bson.M{"$set": bson.M{"state": Starting, "time.startingInSeconds": 10}})
+	runningGame := game.FindRunning(games)
+	if runningGame != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": fmt.Sprintf("Game '%s' is already running", runningGame.Name)})
+		return
+	}
 
-	if game == nil {
+	g := game.Update(games, id, game.Pending, bson.M{"$set": bson.M{"state": game.Starting, "time.startingInSeconds": 10}})
+
+	if g == nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})
 		return
 	}
 
+	game.OnStarting(g)
+
 	startTimer(id)
 
-	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game started: %s", game.Name)})
+	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game started: %s", g.Name)})
 }
 
 func pause(c *gin.Context) {
 	id, games := getGamePost(c)
 
-	game := updateGame(games, id, bson.M{"$set": bson.M{"state": Paused}})
+	g := game.Update(games, id, game.Running, bson.M{"$set": bson.M{"state": game.Paused}})
 
-	if game == nil {
+	if g == nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game paused: %s", game.Name)})
+	game.OnPause(g)
+
+	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game paused: %s", g.Name)})
 }
 
 func resume(c *gin.Context) {
 	id, games := getGamePost(c)
 
-	game := updateGame(games, id, bson.M{"$set": bson.M{"state": Running}})
+	g := game.Update(games, id, game.Paused, bson.M{"$set": bson.M{"state": game.Running}})
 
-	if game == nil {
+	if g == nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game resumed: %s", game.Name)})
+	game.OnResume(g)
+
+	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game resumed: %s", g.Name)})
 }
 
 func stop(c *gin.Context) {
 	id, games := getGamePost(c)
 
-	game := updateGame(games, id, bson.M{"$set": bson.M{"state": Finished}})
+	g := game.Update(games, id, game.Running, bson.M{"$set": bson.M{"state": game.Finished}})
 
-	if game == nil {
+	if g == nil {
 		c.JSON(http.StatusNotAcceptable, gin.H{"message": fmt.Sprintf("Game '%s' not found", id)})
 		return
 	}
 
 	stopTimer <- true
 
-	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game stopped: %s", game.Name)})
+	game.OnStop(g)
+
+	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game stopped: %s", g.Name)})
 }
 
 func getGamePost(c *gin.Context) (string, *mgo.Collection) {

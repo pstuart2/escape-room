@@ -20,18 +20,46 @@ Meteor.publish('game', (_id: Id) => {
 
 Meteor.methods({
   start(id: Id) {
-    HTTP.call('POST', 'http://localhost:3030/start', { data: { id } })
+    try {
+      HTTP.call('POST', 'http://localhost:3030/start', { data: { id } })
+    } catch (e) {
+      return {
+        statusCode: e.response.statusCode,
+        data: e.response.data,
+      }
+    }
   },
 
   pause(id: Id) {
-    HTTP.call('POST', 'http://localhost:3030/pause', { data: { id } })
+    try {
+      HTTP.call('POST', 'http://localhost:3030/pause', { data: { id } })
+    } catch (e) {
+      return {
+        statusCode: e.response.statusCode,
+        data: e.response.data,
+      }
+    }
   },
 
   resume(id: Id) {
-    HTTP.call('POST', 'http://localhost:3030/resume', { data: { id } })
+    try {
+      HTTP.call('POST', 'http://localhost:3030/resume', { data: { id } })
+    } catch (e) {
+      return {
+        statusCode: e.response.statusCode,
+        data: e.response.data,
+      }
+    }
   },
 
   stop(id: Id) {
-    HTTP.call('POST', 'http://localhost:3030/stop', { data: { id } })
+    try {
+      HTTP.call('POST', 'http://localhost:3030/stop', { data: { id } })
+    } catch (e) {
+      return {
+        statusCode: e.response.statusCode,
+        data: e.response.data,
+      }
+    }
   },
 })

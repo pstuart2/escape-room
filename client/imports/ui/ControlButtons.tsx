@@ -13,9 +13,9 @@ export class PendingButtons extends PureComponent<ControlButtonsProps> {
 
     const { game } = this.props
 
-    Meteor.call('start', game._id, (e: any) => {
-      if (e) {
-        console.error('start error', e)
+    Meteor.call('start', game._id, (_: any, result: any) => {
+      if (result) {
+        console.error('start error', result)
       }
     })
   }
@@ -39,9 +39,9 @@ export class RunningButtons extends PureComponent<ControlButtonsProps> {
 
     const { game } = this.props
 
-    Meteor.call('pause', game._id, (e: any) => {
-      if (e) {
-        console.error('pause error', e)
+    Meteor.call('pause', game._id, (_: any, result: any) => {
+      if (result) {
+        console.error('pause error', result)
       }
     })
   }
@@ -51,9 +51,9 @@ export class RunningButtons extends PureComponent<ControlButtonsProps> {
 
     const { game } = this.props
 
-    Meteor.call('resume', game._id, (e: any) => {
-      if (e) {
-        console.error('resume error', e)
+    Meteor.call('resume', game._id, (_: any, result: any) => {
+      if (result) {
+        console.error('resume error', result)
       }
     })
   }
@@ -63,9 +63,9 @@ export class RunningButtons extends PureComponent<ControlButtonsProps> {
 
     const { game } = this.props
 
-    Meteor.call('stop', game._id, (e: any) => {
-      if (e) {
-        console.error('stop error', e)
+    Meteor.call('stop', game._id, (_: any, result: any) => {
+      if (result) {
+        console.error('stop error', result)
       }
     })
   }
@@ -80,14 +80,15 @@ export class RunningButtons extends PureComponent<ControlButtonsProps> {
             Resume
           </button>
         ) : (
-          <button className="btn btn-warning" onClick={this.onPause}>
-            Pause
-          </button>
+          <>
+            <button className="btn btn-warning" onClick={this.onPause}>
+              Pause
+            </button>
+            <button className="btn btn-danger" onClick={this.onStop}>
+              Stop
+            </button>
+          </>
         )}
-
-        <button className="btn btn-error" onClick={this.onStop}>
-          Stop
-        </button>
       </>
     )
   }

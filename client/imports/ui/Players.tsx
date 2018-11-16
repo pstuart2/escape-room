@@ -6,10 +6,8 @@ import { Game, Games } from '../api/games'
 import { RouteComponentProps } from 'react-router'
 import { Id, IdRoute } from '../api/models'
 import * as uniqid from 'uniqid'
-import { TabNav } from './components/TabNav'
 import { PlayerCard } from './PlayerCard'
-import { Simulate } from 'react-dom/test-utils'
-import play = Simulate.play
+import { CustomPlayerFields } from './components/CustomPlayerFields'
 
 interface PlayersTrackerProps {
   game: Game
@@ -28,6 +26,8 @@ export class PlayersComponent extends Component<PlayersProps> {
     name: '',
   }
 
+  customFields = React.createRef<CustomPlayerFields>()
+
   addPlayer = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -37,6 +37,7 @@ export class PlayersComponent extends Component<PlayersProps> {
     const player = {
       _id: uniqid(),
       name,
+      custom: this.customFields.current.getData(),
     }
 
     Games.update({ _id: game._id }, { $push: { players: player } })
@@ -63,33 +64,28 @@ export class PlayersComponent extends Component<PlayersProps> {
     }
 
     return (
-      <div id="players" className="container-fluid">
-        <div className="alert alert-secondary">
-          <h1 className="display-4">Game: {game.name}</h1>
-        </div>
-        <TabNav gameId={game._id} active="players" />
-        <div className="tab-content" id="nav-tabContent">
-          <form onSubmit={this.addPlayer}>
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Player name"
-                value={name}
-                onChange={this.changeName}
-              />
-              <div className="input-group-append">
-                <button className="btn btn-success" type="submit">
-                  Add
-                </button>
-              </div>
+      <div className="tab-content" id="nav-tabContent">
+        <form onSubmit={this.addPlayer}>
+          <div className="input-group mb-3">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Player name"
+              value={name}
+              onChange={this.changeName}
+            />
+            <div className="input-group-append">
+              <button className="btn btn-success" type="submit">
+                Add
+              </button>
             </div>
-          </form>
-          <div id="playerGrid" className="row">
-            {game.players.map(p => (
-              <PlayerCard key={p._id} player={p} onDelete={this.deletePlayer} />
-            ))}
           </div>
+          <CustomPlayerFields ref={this.customFields} />
+        </form>
+        <div id="playerGrid" className="row">
+          {game.players.map(p => (
+            <PlayerCard key={p._id} game={game} player={p} onDelete={this.deletePlayer} />
+          ))}
         </div>
       </div>
     )
