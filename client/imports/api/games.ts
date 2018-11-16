@@ -34,6 +34,7 @@ export interface Game extends GameListItem {}
 export interface Player {
   _id: Id
   name: string
+  custom: any
 }
 
 export type PlayerList = Player[]
