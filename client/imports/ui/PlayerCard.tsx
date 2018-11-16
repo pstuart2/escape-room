@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { Component } from 'react'
-import { Player } from '../api/games'
+import { Game, Player } from '../api/games'
 import { Id } from '../api/models'
+import { CustomPlayerCard } from './components/CustomPlayerCard'
 
 export interface PlayerCardProps {
+  game: Game
   player: Player
   onDelete: (id: Id) => void
 }
@@ -17,18 +19,17 @@ export class PlayerCard extends Component<PlayerCardProps> {
   }
 
   render() {
-    const { player, onDelete } = this.props
+    const { game, player } = this.props
     return (
-      <div className="col-sm-3">
-        <div className="card">
-          <div className="card-body">
-            <h5 className="card-title">{player.name}</h5>
-            <h6 className="card-subtitle mb-2 text-muted">{player._id}</h6>
-            <p className="card-text" />
-            <button className="btn btn-link" onClick={this.handleDelete}>
+      <div className="col-sm-6">
+        <div className="player">
+          <div className="float-right">
+            <button className="btn btn-outline-danger btn-sm" onClick={this.handleDelete}>
               Delete
             </button>
           </div>
+          <h4>{player.name}</h4>
+          <CustomPlayerCard game={game} player={player} />
         </div>
       </div>
     )

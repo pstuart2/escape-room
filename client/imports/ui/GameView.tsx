@@ -1,26 +1,20 @@
 import * as React from 'react'
 import { Component } from 'react'
+import { Game, Games } from '../api/games'
+import { Link, RouteComponentProps } from 'react-router-dom'
+import { ControlButtons } from './ControlButtons'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
-import { Game, Games } from '../api/games'
-import { RouteComponentProps } from 'react-router'
 import { IdRoute } from '../api/models'
-import { TabNav } from './components/TabNav'
-import { Link } from 'react-router-dom'
-import { ControlButtons } from './ControlButtons'
-import { Duration } from 'luxon'
+import { CustomGameFields } from './components/CustomGameFields'
 
 interface GameViewTrackerProps {
   game: Game
 }
 
-interface GameViewState {
-  name: string
-}
+type GameRoutesOwnProps = RouteComponentProps<IdRoute>
 
-type GameViewOwnProps = RouteComponentProps<IdRoute>
-
-type GameViewProps = GameViewOwnProps & GameViewTrackerProps
+type GameViewProps = GameViewTrackerProps & GameRoutesOwnProps
 
 export class GameViewComponent extends Component<GameViewProps> {
   render() {
@@ -30,33 +24,20 @@ export class GameViewComponent extends Component<GameViewProps> {
       return null
     }
 
-    const duration = Duration.fromMillis(game.time.gameRunningSeconds * 1000)
-    const pausedDuration = Duration.fromMillis(game.time.pausedSeconds * 1000)
-
     return (
-      <div id="game" className="container-fluid">
-        <div className="alert alert-secondary">
-          <div className="text-monospace float-right">
-            Game Time&nbsp;&nbsp;: {duration.toFormat('hh:mm:ss')}
-            <br />
-            Paused Time: {pausedDuration.toFormat('hh:mm:ss')}
+      <div className="tab-content" id="nav-tabContent">
+        <div className="button-bar">
+          <div className="float-right">
+            <ControlButtons game={game} />
           </div>
-          <h1>Game: {game.name}</h1>
-        </div>
-        <TabNav gameId={game._id} active="game" />
-        <div className="tab-content" id="nav-tabContent">
-          <div className="button-bar">
-            <div className="float-right">
-              <ControlButtons game={game} />
-            </div>
-
-            <Link to="/" className="btn btn-outline-secondary">
-              Home
-            </Link>
-
-            <Link to={`${game._id}/dashboard`} className="btn btn-dark">
-              Dashboard
-            </Link>
+          <Link to="/" className="btn btn-outline-secondary">
+            Home
+          </Link>
+          <Link to={`${game._id}/dashboard`} className="btn btn-dark">
+            Dashboard
+          </Link>
+          <div className="custom-game-fields">
+            <CustomGameFields game={game} />
           </div>
         </div>
       </div>
@@ -64,7 +45,7 @@ export class GameViewComponent extends Component<GameViewProps> {
   }
 }
 
-export const GameView = withTracker<GameViewTrackerProps, GameViewOwnProps>(ownProps => {
+export const GameView = withTracker<GameViewTrackerProps, GameRoutesOwnProps>(ownProps => {
   Meteor.subscribe('game', ownProps.match.params.id)
 
   const game = Games.findOne({ _id: ownProps.match.params.id })
