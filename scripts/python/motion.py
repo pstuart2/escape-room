@@ -3,11 +3,10 @@ import time
 import configparser
 import requests
 
-MotionPin = 4  # Input for HC-S501
-
+EffectsServer = ""
 ResetTime = 5
 PollingTime = 0.25
-EffectsServer = ""
+MotionPin = 4  # Input for HC-SR501
 
 
 def setup():
@@ -20,7 +19,7 @@ def setup():
     EffectsServer = config['DEFAULT']['EffectsServer']
     ResetTime = int(config['motion']['ResetTime'])
     PollingTime = float(config['motion']['PollingTime'])
-    MotionPin = int(config['motion']['Pin'])
+    MotionPin = int(config['motion']['MotionPin'])
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(MotionPin, GPIO.IN)  # Read output from PIR motion sensor
