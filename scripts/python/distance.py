@@ -32,13 +32,11 @@ def loop():
     global PollingTime
 
     while True:
-        dist = distance()
-        print("Measured Distance = %.1f cm" % dist)
-        send(dist)
+        send(get_distance())
         time.sleep(PollingTime)
 
 
-def distance():
+def get_distance():
     global TriggerPin, EchoPin
 
     # set Trigger to HIGH
@@ -67,10 +65,12 @@ def distance():
     return (time_elapsed * 34300) / 2
 
 
-def send(has_distance):
+def send(distance_of):
     global EffectsServer
 
-    r = requests.post(EffectsServer + "/distance", json={"distance": has_distance})
+    print('Sending distance: ' + str(distance_of))
+
+    r = requests.post(EffectsServer + "/distance", json={"distance": distance_of})
     if r.status_code != 200:
         print("send_command Status: " + str(r.status_code))
 

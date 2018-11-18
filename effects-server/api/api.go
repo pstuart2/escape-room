@@ -29,6 +29,7 @@ func SetUp(dbSession *mgo.Session) *gin.Engine {
 	r.POST("/stop", stop)
 
 	r.POST("/motion", motion)
+	r.POST("/distance", distance)
 
 	checkAndResumeRunningGame()
 
