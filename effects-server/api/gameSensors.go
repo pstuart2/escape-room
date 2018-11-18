@@ -9,21 +9,25 @@ import (
 )
 
 type GameMotionPost struct {
-	HasMotion int `json:"hasMotion" binding:"required"`
+	HasMotion int `json:"hasMotion"`
 }
 
 func motion(c *gin.Context) {
 	var json GameMotionPost
 	if err := c.ShouldBindJSON(&json); err != nil {
+		log.Errorf("Error: %s", err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
+	log.Printf("/motion = %d", json.HasMotion)
 	c.JSON(http.StatusOK, gin.H{})
 
+	db := c.MustGet("db").(*mgo.Session).Copy()
+
 	go func() {
-		games := c.MustGet("games").(*mgo.Collection)
-		g := game.FindRunning(games)
+		defer db.Close()
+		g := game.FindRunning(Games(db))
 		if g != nil {
 			return
 		}

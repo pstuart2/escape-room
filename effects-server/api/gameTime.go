@@ -63,24 +63,24 @@ func startingTick(games *mgo.Collection, g *game.Game) {
 	log.Infof("startingTick for game %s", g.Name)
 
 	if g.Time.StartingInSeconds == 1 {
-		g = game.Update(games, g.ID, bson.M{"$inc": bson.M{"time.startingInSeconds": -1}, "$set": bson.M{"state": game.Running}})
+		g = game.Update(games, g.ID, game.Starting, bson.M{"$inc": bson.M{"time.startingInSeconds": -1}, "$set": bson.M{"state": game.Running}})
 		game.OnStart(g)
 	} else {
-		g = game.Update(games, g.ID, bson.M{"$inc": bson.M{"time.startingInSeconds": -1}})
+		g = game.Update(games, g.ID, game.Starting, bson.M{"$inc": bson.M{"time.startingInSeconds": -1}})
 		game.OnStartingTick(g)
 	}
 }
 
 func runningTick(games *mgo.Collection, g *game.Game) {
 	log.Infof("runningTick for game %s", g.Name)
-	g = game.Update(games, g.ID, bson.M{"$inc": bson.M{"time.gameRunningSeconds": 1}})
+	g = game.Update(games, g.ID, game.Running, bson.M{"$inc": bson.M{"time.gameRunningSeconds": 1}})
 
 	game.OnRunningTick(g)
 }
 
 func pauseTick(games *mgo.Collection, g *game.Game) {
 	log.Infof("pauseTick for game %s", g.Name)
-	g = game.Update(games, g.ID, bson.M{"$inc": bson.M{"time.pausedSeconds": 1}})
+	g = game.Update(games, g.ID, game.Paused, bson.M{"$inc": bson.M{"time.pausedSeconds": 1}})
 
 	game.OnPauseTick(g)
 }

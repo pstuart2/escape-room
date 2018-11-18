@@ -44,6 +44,7 @@ func db(dbSession *mgo.Session) gin.HandlerFunc {
 		session := dbSession.Copy()
 		defer session.Close()
 
+		c.Set("db", session)
 		c.Set("games", Games(session))
 
 		c.Next()

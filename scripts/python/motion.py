@@ -4,61 +4,46 @@ import configparser
 import requests
 
 EffectsServer = ""
-ResetTime = 5
-PollingTime = 0.25
 MotionPin = 4  # Input for HC-SR501
+LastMovementState = 0
 
 
 def setup():
-    global EffectsServer, MotionPin, ResetTime, PollingTime
+    global EffectsServer, MotionPin
 
     print("> Set up")
     config = configparser.ConfigParser()
     config.read('config.ini')
 
     EffectsServer = config['DEFAULT']['EffectsServer']
-    ResetTime = int(config['motion']['ResetTime'])
-    PollingTime = float(config['motion']['PollingTime'])
     MotionPin = int(config['motion']['MotionPin'])
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(MotionPin, GPIO.IN)  # Read output from PIR motion sensor
 
 
-def loop():
-    global i_last
+def state_change(channel):
+    global LastMovementState
 
-    i_last = 1
+    if LastMovementState == 0:
+        LastMovementState = 1
+    else:
+        LastMovementState = 0
+
+    send(LastMovementState)
+
+
+def loop():
+    GPIO.add_event_detect(MotionPin, GPIO.BOTH, callback=state_change)
 
     while True:
-        i_current = GPIO.input(MotionPin)
-        send_on_change(i_current, i_last)
-
-        if i_current == 0:  # When output from motion sensor is LOW
-            print("No intruders", i_current)
-
-        elif i_current == 1:  # When output from motion sensor is HIGH
-            print("Intruder detected", i_current)
-
-        i_last = i_current
-
-
-def send_on_change(current, last):
-    global PollingTime, ResetTime
-
-    if current != last:
-        print("Sending change")
-        send(current)
-
-        if current == 0:
-            print("Resetting")
-            time.sleep(ResetTime)
-    else:
-        time.sleep(PollingTime)
+        time.sleep(10)
 
 
 def send(has_motion):
     global EffectsServer
+
+    print('Sending motion: ' + str(has_motion))
 
     r = requests.post(EffectsServer + "/motion", json={"hasMotion": has_motion})
     if r.status_code != 200:
