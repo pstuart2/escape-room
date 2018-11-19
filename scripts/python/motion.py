@@ -60,4 +60,6 @@ if __name__ == '__main__':  # Program start from here
     try:
         loop()
     except KeyboardInterrupt:
+        pass
+    finally:
         destroy()
