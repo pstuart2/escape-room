@@ -37,3 +37,11 @@ func OnResume(g *Game) {
 
 func OnStop(g *Game) {
 }
+
+func OnMotionChange(g *Game, hasMotion int) {
+
+}
+
+func OnDistanceChange(g *Game, distance float64) {
+
+}
