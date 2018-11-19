@@ -45,3 +45,7 @@ func OnMotionChange(g *Game, hasMotion int) {
 func OnDistanceChange(g *Game, distance float64) {
 
 }
+
+func OnRfid(g *Game, id int64, text string) {
+
+}
