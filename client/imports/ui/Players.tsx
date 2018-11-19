@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Component } from 'react'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Meteor } from 'meteor/meteor'
-import { Game, Games } from '../api/games'
+import { Game, Games, Player } from '../api/games'
 import { RouteComponentProps } from 'react-router'
 import { Id, IdRoute } from '../api/models'
 import * as uniqid from 'uniqid'
@@ -34,10 +34,10 @@ export class PlayersComponent extends Component<PlayersProps> {
     const { name } = this.state
     const { game } = this.props
 
-    const player = {
+    const player: Player = {
       _id: uniqid(),
       name,
-      custom: this.customFields.current.getData(),
+      data: this.customFields.current.getData(),
     }
 
     Games.update({ _id: game._id }, { $push: { players: player } })
