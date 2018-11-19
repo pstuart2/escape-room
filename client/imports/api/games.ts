@@ -1,5 +1,6 @@
 import { Mongo } from 'meteor/mongo'
 import { Id } from './models'
+import { Data } from './data'
 
 export const Games = new Mongo.Collection<Game>('games')
 
@@ -10,6 +11,7 @@ export interface GameListItem {
   players: PlayerList
   state: GameState
   time: RunningInfo
+  data?: Data
 }
 
 export enum GameState {
