@@ -9,6 +9,6 @@ export interface CustomPlayerCardProps {
 
 export class CustomPlayerCard extends Component<CustomPlayerCardProps> {
   render() {
-    return <>...you can customize this player area...</>
+    return <></>
   }
 }

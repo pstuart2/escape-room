@@ -8,9 +8,11 @@ export interface CustomTopBarProps {
 
 export class CustomTopBar extends Component<CustomTopBarProps> {
   render() {
+    const { game } = this.props
+
     return (
       <div className="col-sm">
-        <div>...you can customize this...</div>
+        <div>{game.data.stateText}</div>
       </div>
     )
   }
