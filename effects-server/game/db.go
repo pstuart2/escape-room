@@ -9,10 +9,10 @@ import (
 	"github.com/globalsign/mgo/bson"
 )
 
-type GameState uint
+type State uint
 
 const (
-	Pending GameState = iota
+	Pending State = iota
 	Starting
 	Running
 	Paused
@@ -23,8 +23,9 @@ type Game struct {
 	ID        string      `bson:"_id,omitempty" json:"id"`
 	CreatedAt time.Time   `bson:"createdAt" json:"createdAt"`
 	Name      string      `bson:"name" json:"name"`
-	State     GameState   `bson:"state" json:"state"`
+	State     State       `bson:"state" json:"state"`
 	Time      RunningInfo `bson:"time" json:"time"`
+	Data      Data        `bson:"data" json:"data"`
 }
 
 type RunningInfo struct {
@@ -63,7 +64,7 @@ func FindRunning(games *mgo.Collection) *Game {
 	return &game
 }
 
-func Update(games *mgo.Collection, id string, expectedState GameState, update interface{}) *Game {
+func Update(games *mgo.Collection, id string, expectedState State, update interface{}) *Game {
 	change := mgo.Change{
 		Update:    update,
 		Upsert:    false,
