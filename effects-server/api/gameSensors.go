@@ -9,7 +9,8 @@ import (
 )
 
 type GameMotionPost struct {
-	HasMotion int `json:"hasMotion"`
+	HasMotion int    `json:"hasMotion"`
+	Direction string `json:"direction"`
 }
 
 func motion(c *gin.Context) {
@@ -20,7 +21,7 @@ func motion(c *gin.Context) {
 		return
 	}
 
-	log.Printf("/motion = %d", json.HasMotion)
+	log.Printf("/motion = {hasMotion=%d, direction:%s", json.HasMotion, json.Direction)
 	c.JSON(http.StatusOK, gin.H{})
 
 	db := c.MustGet("db").(*mgo.Session).Copy()
