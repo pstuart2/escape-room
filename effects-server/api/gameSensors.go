@@ -33,12 +33,13 @@ func motion(c *gin.Context) {
 			return
 		}
 
-		game.OnMotionChange(g, json.HasMotion)
+		game.OnMotionChange(g, Games(db), json.HasMotion)
 	}()
 }
 
 type GameDistancePost struct {
 	Distance float64 `json:"distance"`
+	Index    int     `json:"index"`
 }
 
 func distance(c *gin.Context) {
@@ -49,20 +50,11 @@ func distance(c *gin.Context) {
 		return
 	}
 
-	log.Printf("/distance = %f", json.Distance)
+	log.Printf("/distance = {index: %d, distance: %f}", json.Index, json.Distance)
+
+	game.OnDistanceChange(json.Index, json.Distance)
+
 	c.JSON(http.StatusOK, gin.H{})
-
-	db := c.MustGet("db").(*mgo.Session).Copy()
-
-	go func() {
-		defer db.Close()
-		g := game.FindRunning(Games(db))
-		if g != nil {
-			return
-		}
-
-		game.OnDistanceChange(g, json.Distance)
-	}()
 }
 
 type GameRFIDPost struct {
@@ -90,6 +82,6 @@ func rfid(c *gin.Context) {
 			return
 		}
 
-		game.OnRfid(g, json.ID, json.Text)
+		game.OnRfid(g, Games(db), json.ID, json.Text)
 	}()
 }
