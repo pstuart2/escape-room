@@ -43,6 +43,10 @@ var fields = bson.M{
 	"time":      1,
 }
 
+func Games(s *mgo.Session) *mgo.Collection {
+	return s.DB("").C("games")
+}
+
 func FindById(games *mgo.Collection, id string) *Game {
 	var game Game
 

@@ -10,9 +10,11 @@ TriggerPin = 18
 EchoPin = 24
 PollingTime = 0.5
 
+ScriptIndex = 0
+
 
 def setup():
-    global EffectsServer, TriggerPin, EchoPin, PollingTime
+    global EffectsServer, TriggerPin, EchoPin, PollingTime, ScriptIndex
 
     print("> Set up")
     config = configparser.ConfigParser()
@@ -22,6 +24,8 @@ def setup():
     TriggerPin = int(config['distance']['TriggerPin'])
     EchoPin = int(config['distance']['EchoPin'])
     PollingTime = float(config['distance']['PollingTime'])
+
+    ScriptIndex = int(sys.argv[1])
 
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(TriggerPin, GPIO.OUT)
@@ -66,11 +70,11 @@ def get_distance():
 
 
 def send(distance_of):
-    global EffectsServer
+    global EffectsServer, ScriptIndex
 
     print('Sending distance: ' + str(distance_of))
 
-    r = requests.post(EffectsServer + "/distance", json={"distance": distance_of})
+    r = requests.post(EffectsServer + "/distance", json={"distance": distance_of, "index": ScriptIndex})
     if r.status_code != 200:
         print("send_command Status: " + str(r.status_code))
 
@@ -81,10 +85,13 @@ def destroy():
 
 
 if __name__ == '__main__':  # Program start from here
-    setup()
-    try:
-        loop()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        destroy()
+    if len(sys.argv) != 2:
+        print('Script index is required!')
+    else:
+        setup()
+        try:
+            loop()
+        except KeyboardInterrupt:
+            pass
+        finally:
+            destroy()
