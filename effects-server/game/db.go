@@ -41,6 +41,7 @@ var fields = bson.M{
 	"name":      1,
 	"state":     1,
 	"time":      1,
+	"data":      1,
 }
 
 func Games(s *mgo.Session) *mgo.Collection {
@@ -61,7 +62,8 @@ func FindById(games *mgo.Collection, id string) *Game {
 func FindRunning(games *mgo.Collection) *Game {
 	var game Game
 
-	if err := games.Find(bson.M{"$and": []bson.M{{"state": bson.M{"$ne": Pending}}, {"state": bson.M{"$ne": Finished}}}}).Select(fields).One(&game); err != nil {
+	//if err := games.Find(bson.M{"$and": []bson.M{{"state": bson.M{"$ne": Pending}}, {"state": bson.M{"$ne": Finished}}}}).Select(fields).One(&game); err != nil {
+	if err := games.Find(bson.M{"state": bson.M{"$nin": []int{0, 4}}}).Select(fields).One(&game); err != nil {
 		return nil
 	}
 

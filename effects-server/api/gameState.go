@@ -42,7 +42,7 @@ func pause(c *gin.Context) {
 		return
 	}
 
-	game.OnPause(g)
+	game.OnPause(g, games)
 
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game paused: %s", g.Name)})
 }
@@ -57,7 +57,7 @@ func resume(c *gin.Context) {
 		return
 	}
 
-	game.OnResume(g)
+	game.OnResume(g, games)
 
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game resumed: %s", g.Name)})
 }
@@ -74,7 +74,7 @@ func stop(c *gin.Context) {
 
 	stopTimer <- true
 
-	game.OnStop(g)
+	game.OnStop(g, games)
 
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("game stopped: %s", g.Name)})
 }

@@ -1,5 +1,7 @@
 package game
 
+import "math"
+
 // https://notes.shichao.io/gopl/ch9/
 
 type DistanceValue struct {
@@ -8,17 +10,17 @@ type DistanceValue struct {
 }
 
 var set = make(chan DistanceValue) // send amount to deposit
-var get = make(chan []float64)     // receive balance
+var get = make(chan []int)         // receive balance
 
 func SetDistance(distance DistanceValue) { set <- distance }
-func GetDistances() []float64            { return <-get }
+func GetDistances() []int                { return <-get }
 
 func distanceManager() {
-	distances := make([]float64, 3)
+	distances := make([]int, 3)
 	for {
 		select {
 		case distance := <-set:
-			distances[distance.Index] = distance.Distance
+			distances[distance.Index] = int(math.Round(distance.Distance))
 		case get <- distances:
 		}
 	}

@@ -17,7 +17,7 @@ const getIcon = (data: GameData) => {
     case ScriptState.InFirstGate:
     case ScriptState.InSecondGate:
     case ScriptState.InThirdGate:
-      return <i className="fas archway" />
+      return <i className="fas fa-archway" />
   }
 
   return <i className="fas fa-trophy" />

@@ -78,7 +78,8 @@ func rfid(c *gin.Context) {
 	go func() {
 		defer db.Close()
 		g := game.FindRunning(Games(db))
-		if g != nil {
+		if g == nil {
+			log.Warn("/rfid: No running game.")
 			return
 		}
 

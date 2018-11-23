@@ -19,6 +19,7 @@ func checkAndResumeRunningGame() {
 	}
 
 	startTimer(runningGame.ID)
+	game.Init(runningGame)
 }
 
 func startTimer(id string) {
@@ -72,6 +73,10 @@ func startingTick(games *mgo.Collection, g *game.Game) {
 }
 
 func runningTick(games *mgo.Collection, g *game.Game) {
+	if g.State != game.Running {
+		return
+	}
+
 	log.Infof("runningTick for game %s", g.Name)
 	g = game.Update(games, g.ID, game.Running, bson.M{"$inc": bson.M{"time.gameRunningSeconds": 1}})
 
