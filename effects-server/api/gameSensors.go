@@ -3,6 +3,7 @@ package api
 import (
 	"escape-room/effects-server/game"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
@@ -83,6 +84,6 @@ func rfid(c *gin.Context) {
 			return
 		}
 
-		game.OnRfid(g, Games(db), json.ID, json.Text)
+		game.OnRfid(g, Games(db), json.ID, strings.TrimSpace(json.Text))
 	}()
 }

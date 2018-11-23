@@ -16,8 +16,6 @@ func Init(g *Game) {
 		"component": "game",
 		"gameId":    g.ID,
 	})
-
-	initDistanceManager()
 }
 
 func OnStarting(g *Game) {
@@ -113,10 +111,11 @@ func OnDistanceChange(index int, distance float64) {
 }
 
 func OnRfid(g *Game, games *mgo.Collection, id int64, text string) {
-	log.Infof("OnRfid: %s", text)
+	log.Infof("OnRfid: %d / %s", g.Data.ScriptState, text)
 
 	switch g.Data.ScriptState {
 	case WaitingOnFirstKey:
+		log.Infof("text %s == %s", text, g.Data.Key1RfidText)
 		if text == g.Data.Key1RfidText {
 			log.Info("Opening the first gate")
 			g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.scriptState": InFirstGate, "data.stateText": "Finish the first gate"}})

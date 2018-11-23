@@ -1,6 +1,7 @@
 package api
 
 import (
+	"escape-room/effects-server/game"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
@@ -33,6 +34,7 @@ func SetUp(dbSession *mgo.Session) *gin.Engine {
 	r.POST("/rfid", rfid)
 
 	checkAndResumeRunningGame()
+	game.InitDistanceManager()
 
 	return r
 }

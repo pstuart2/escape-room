@@ -26,6 +26,6 @@ func distanceManager() {
 	}
 }
 
-func initDistanceManager() {
+func InitDistanceManager() {
 	go distanceManager() // start the monitor goroutine
 }

@@ -4,6 +4,7 @@ import RPi.GPIO as GPIO
 import time
 import configparser
 import requests
+import sys
 
 EffectsServer = ""
 TriggerPin = 18
