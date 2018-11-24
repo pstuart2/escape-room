@@ -1,6 +1,7 @@
 package game
 
 import (
+	"escape-room/effects-server/sound"
 	"strings"
 	"time"
 
@@ -19,6 +20,7 @@ func Init(g *Game) {
 }
 
 func OnStarting(g *Game) {
+	sound.Play(sound.ChainDoorShut)
 	Init(g)
 }
 
@@ -57,6 +59,8 @@ func handleCorrectDistanceAnswer(g *Game, games *mgo.Collection, distances []int
 
 	g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.currentDistances": distances, "data.stateAnswer": "Correct", "data.answerState": Correct}})
 
+	sound.Play(sound.CorrectAnswer)
+
 	db := games.Database.Session.Copy()
 	go func() {
 		defer db.Close()
@@ -75,6 +79,8 @@ func handleWrongDistanceAnswer(g *Game, games *mgo.Collection, distances []int) 
 	}
 
 	g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.currentDistances": distances, "data.stateAnswer": "Wrong", "data.answerState": Wrong}})
+
+	sound.Play(sound.WrongAnswer)
 
 	db := games.Database.Session.Copy()
 	go func() {
@@ -115,8 +121,8 @@ func OnRfid(g *Game, games *mgo.Collection, id int64, text string) {
 
 	switch g.Data.ScriptState {
 	case WaitingOnFirstKey:
-		log.Infof("text %s == %s", text, g.Data.Key1RfidText)
 		if text == g.Data.Key1RfidText {
+			sound.Play(sound.MusicLoop)
 			log.Info("Opening the first gate")
 			g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.scriptState": InFirstGate, "data.stateText": "Finish the first gate"}})
 		}
@@ -129,6 +135,7 @@ func OnRfid(g *Game, games *mgo.Collection, id int64, text string) {
 	case WaitingOnSecondKey:
 		if text == g.Data.Key2RfidText {
 			// Open second gate
+			sound.Play(sound.MusicLoop)
 			g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.scriptState": InSecondGate, "data.stateText": "Finish the second gate"}})
 		}
 		break
@@ -139,14 +146,15 @@ func OnRfid(g *Game, games *mgo.Collection, id int64, text string) {
 
 	case WaitingOnThirdKey:
 		if text == g.Data.Key3RfidText {
-			// Open second gate
-			g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.scriptState": InThirdGate, "data.stateText": "Finish the third gate"}})
+			sound.Play(sound.UndergroundEffect)
+			g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.scriptState": InThirdGate, "data.stateText": "Finish the third gate", "data.currentDistanceTestSeconds": 20}})
 		}
 		break
 
 	case WaitingOnEgg:
 		if text == "egg" {
 			g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"state": Finished, "data.scriptState": Complete, "data.stateText": "Done!"}})
+			sound.Play(sound.Clapping)
 		}
 	}
 }
@@ -178,6 +186,8 @@ func handleRfidGates(g *Game, games *mgo.Collection, text string, gateAnswer str
 func handleWrongAnswer(g *Game, games *mgo.Collection, answer string) {
 	g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.stateAnswer": answer, "data.answerState": Wrong}})
 
+	sound.Play(sound.WrongAnswer)
+
 	db := games.Database.Session.Copy()
 	go func() {
 		defer db.Close()
@@ -190,6 +200,8 @@ func handleWrongAnswer(g *Game, games *mgo.Collection, answer string) {
 
 func handleCorrectAnswer(g *Game, games *mgo.Collection, answer string, nextState ScriptState, nextText string) {
 	g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.stateAnswer": answer, "data.answerState": Correct}})
+
+	sound.Play(sound.CorrectAnswer)
 
 	db := games.Database.Session.Copy()
 	go func() {

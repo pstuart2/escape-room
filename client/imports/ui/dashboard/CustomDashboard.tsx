@@ -77,18 +77,22 @@ export class Answering extends Component<CustomDashboardProps> {
     switch (data.scriptState) {
       case ScriptState.InFirstGate:
         return (
-          <>
+          <div style={{ marginTop: '40px', textAlign: 'center' }}>
             <h3>{data.clueForFirstGate}</h3>
-            <h2>{data.stateAnswer.toUpperCase()}</h2>
-          </>
+            <h2 className="display-1">{data.stateAnswer.toUpperCase()}</h2>
+          </div>
         )
 
       case ScriptState.InSecondGate:
         return (
-          <>
-            <h3>{data.clueForSecondGate}</h3>
-            <h2>{data.stateAnswer.toUpperCase()}</h2>
-          </>
+          <div style={{ marginTop: '40px', textAlign: 'center' }}>
+            <h3>
+              {data.clueForSecondGate.split(',').map(v => (
+                <div>{v}</div>
+              ))}
+            </h3>
+            <h2 className="display-1">{data.stateAnswer.toUpperCase()}</h2>
+          </div>
         )
 
       case ScriptState.InThirdGate:
@@ -119,24 +123,32 @@ export class CustomDashboard extends Component<CustomDashboardProps> {
         )
       case ScriptState.WaitingOnSecondKey:
         return (
-          <>
+          <div style={{ marginTop: '40px', textAlign: 'center' }}>
             <h2>{game.data.clueForSecondKey}</h2>
             <h3>{game.data.clueText}</h3>
-          </>
+          </div>
         )
       case ScriptState.WaitingOnThirdKey:
         return (
-          <>
+          <div style={{ marginTop: '40px', textAlign: 'center' }}>
             <h2>{game.data.clueForThirdKey}</h2>
             <h3>{game.data.clueText}</h3>
-          </>
+          </div>
         )
 
       case ScriptState.WaitingOnEgg:
-        return <h1>Egg!</h1>
+        return (
+          <div style={{ marginTop: '40px', textAlign: 'center' }}>
+            <h2 className="display-1">Use the egg!</h2>
+          </div>
+        )
 
       case ScriptState.Complete:
-        return <h1>Done</h1>
+        return (
+          <div style={{ marginTop: '40px', textAlign: 'center' }}>
+            <h2 className="display-1">Done!</h2>
+          </div>
+        )
     }
   }
 }

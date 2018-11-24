@@ -23,6 +23,7 @@ const (
 	MusicLoop         = "./sounds/short-12second-music-loop.wav"
 	RandomDoorSlam    = "./sounds/random-door-slam.wav"
 	UndergroundEffect = "./sounds/underground-sound-effect.wav"
+	Psycholand        = "./sounds/psycholand.wav"
 
 	Pause       = "./sounds/pause.wav"
 	Unpause     = "./sounds/unpause.wav"
@@ -34,20 +35,22 @@ const (
 )
 
 func Play(sound string) {
-	fmt.Printf("Starting sound: %s\n", sound)
+	go func() {
+		fmt.Printf("Starting sound: %s\n", sound)
 
-	f, _ := os.Open(sound)
-	s, format, _ := wav.Decode(f)
-	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+		f, _ := os.Open(sound)
+		s, format, _ := wav.Decode(f)
+		speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 
-	done := make(chan struct{})
+		done := make(chan struct{})
 
-	speaker.Play(beep.Seq(s, beep.Callback(func() {
-		fmt.Printf("Ending sound: %s\n", sound)
-		close(done)
-	})))
+		speaker.Play(beep.Seq(s, beep.Callback(func() {
+			fmt.Printf("Ending sound: %s\n", sound)
+			close(done)
+		})))
 
-	<-done
+		<-done
+	}()
 }
 
 var effects = []string{BunnyGrowl, ChainDrag, CreeperExplosion, EnderDeath, Explosion, RandomDoorSlam, MusicLoop, UndergroundEffect}
