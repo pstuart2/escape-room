@@ -2,6 +2,7 @@ package game
 
 import (
 	"escape-room/effects-server/sound"
+	"math"
 	"strings"
 	"time"
 
@@ -11,6 +12,8 @@ import (
 )
 
 var log *logrus.Entry
+
+var correctDistances = make([]bool, 3)
 
 func Init(g *Game) {
 	log = logrus.WithFields(logrus.Fields{
@@ -41,17 +44,38 @@ func OnRunningTick(g *Game, games *mgo.Collection) {
 	distances := GetDistances()
 	expected := g.Data.Gate3Answer[g.Data.CurrentDistanceTestIndex]
 
-	if expected.Distances[0] == distances[0] &&
-		expected.Distances[1] == distances[1] &&
-		expected.Distances[2] == distances[2] {
+	if !correctDistances[0] && expected.Distances[0] == distances[0] {
+		correctDistances[0] = true
+	} else if math.Abs(float64(expected.Distances[0]-distances[0])) > 5 {
+		correctDistances[0] = false
+	}
+
+	if !correctDistances[1] && expected.Distances[1] == distances[1] {
+		correctDistances[1] = true
+	} else if math.Abs(float64(expected.Distances[1]-distances[1])) > 5 {
+		correctDistances[1] = false
+	}
+
+	if !correctDistances[2] && expected.Distances[2] == distances[2] {
+		correctDistances[2] = true
+	} else if math.Abs(float64(expected.Distances[2]-distances[2])) > 5 {
+		correctDistances[2] = false
+	}
+
+	if correctDistances[0] &&
+		correctDistances[1] &&
+		correctDistances[2] {
 		handleCorrectDistanceAnswer(g, games, distances)
 	} else {
 		handleWrongDistanceAnswer(g, games, distances)
 	}
-
 }
 
 func handleCorrectDistanceAnswer(g *Game, games *mgo.Collection, distances []int) {
+	correctDistances[0] = false
+	correctDistances[1] = false
+	correctDistances[2] = false
+
 	if len(g.Data.Gate3Answer) == g.Data.CurrentDistanceTestIndex+1 {
 		handleCorrectAnswer(g, games, "Correct", WaitingOnEgg, "Use the egg")
 		return
