@@ -2,3 +2,5 @@
 **/\.idea/workspace\.xml
 **/vendor/**
 *.exe
+
+effects-server/sounds/

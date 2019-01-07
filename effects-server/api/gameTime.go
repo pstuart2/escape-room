@@ -64,10 +64,10 @@ func startingTick(games *mgo.Collection, g *game.Game) {
 
 	if g.Time.StartingInSeconds == 1 {
 		g = game.Update(games, g.ID, game.Starting, bson.M{"$inc": bson.M{"time.startingInSeconds": -1}, "$set": bson.M{"state": game.Running}})
-		game.OnStart(g)
+		game.OnStart(g, games)
 	} else {
 		g = game.Update(games, g.ID, game.Starting, bson.M{"$inc": bson.M{"time.startingInSeconds": -1}})
-		game.OnStartingTick(g)
+		game.OnStartingTick(g, games)
 	}
 }
 
@@ -75,12 +75,12 @@ func runningTick(games *mgo.Collection, g *game.Game) {
 	log.Infof("runningTick for game %s", g.Name)
 	g = game.Update(games, g.ID, game.Running, bson.M{"$inc": bson.M{"time.gameRunningSeconds": 1}})
 
-	game.OnRunningTick(g)
+	game.OnRunningTick(g, games)
 }
 
 func pauseTick(games *mgo.Collection, g *game.Game) {
 	log.Infof("pauseTick for game %s", g.Name)
 	g = game.Update(games, g.ID, game.Paused, bson.M{"$inc": bson.M{"time.pausedSeconds": 1}})
 
-	game.OnPauseTick(g)
+	game.OnPauseTick(g, games)
 }

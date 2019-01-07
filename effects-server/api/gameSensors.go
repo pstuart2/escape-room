@@ -27,12 +27,13 @@ func motion(c *gin.Context) {
 
 	go func() {
 		defer db.Close()
-		g := game.FindRunning(Games(db))
+		games := Games(db)
+		g := game.FindRunning(games)
 		if g != nil {
 			return
 		}
 
-		game.OnMotionChange(g, json.HasMotion)
+		game.OnMotionChange(g, games, json.HasMotion)
 	}()
 }
 
@@ -55,12 +56,13 @@ func distance(c *gin.Context) {
 
 	go func() {
 		defer db.Close()
-		g := game.FindRunning(Games(db))
+		games := Games(db)
+		g := game.FindRunning(games)
 		if g != nil {
 			return
 		}
 
-		game.OnDistanceChange(g, json.Distance)
+		game.OnDistanceChange(g, games, json.Distance)
 	}()
 }
 
@@ -84,11 +86,12 @@ func rfid(c *gin.Context) {
 
 	go func() {
 		defer db.Close()
-		g := game.FindRunning(Games(db))
+		games := Games(db)
+		g := game.FindRunning(games)
 		if g != nil {
 			return
 		}
 
-		game.OnRfid(g, json.ID, json.Text)
+		game.OnRfid(g, games, json.ID, json.Text)
 	}()
 }
