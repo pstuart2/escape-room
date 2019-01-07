@@ -28,6 +28,9 @@ def setup():
 
     ScriptIndex = int(sys.argv[1])
 
+    print("- Trigger: " + str(TriggerPin))
+    print("- Echo   : " + str(EchoPin))
+
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(TriggerPin, GPIO.OUT)
     GPIO.setup(EchoPin, GPIO.IN)
@@ -35,6 +38,8 @@ def setup():
 
 def loop():
     global PollingTime
+
+    print("> Starting")
 
     while True:
         send(get_distance())
@@ -75,9 +80,9 @@ def send(distance_of):
 
     print('Sending distance: ' + str(distance_of))
 
-    r = requests.post(EffectsServer + "/distance", json={"distance": distance_of, "index": ScriptIndex})
+    r = requests.post(EffectsServer + "/distance", timeout=5.0, json={"distance": distance_of, "index": ScriptIndex})
     if r.status_code != 200:
-        print("send_command Status: " + str(r.status_code))
+       print("send_command Status: " + str(r.status_code))
 
 
 def destroy():

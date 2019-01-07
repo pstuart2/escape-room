@@ -61,8 +61,8 @@ export const getGameData = (): GameData => ({
   stateAnswer: '',
   clueText: '',
 
-  clueForSecondKey: 'What does everybody want to rule?', // Answer "world" for word lock
-  clueForThirdKey: 'What type of science? Look for clues in the room.', // Answer "weird" for second word lock
+  clueForSecondKey: 'Which countdown?', // Answer "world" for word lock
+  clueForThirdKey: 'What type of science?', // Answer "weird" for second word lock
 
   clueForFirstGate: 'Use the code to figure out the question. Use the blue chips to answer it',
   clueForSecondGate: 'N = Go North,E = Go East,S = Go South,W = Go West,F = Fight,P = Pick Up,D = Drop', // TODO: Script map for them to follow
@@ -72,7 +72,7 @@ export const getGameData = (): GameData => ({
   key2RfidText: 'second_key',
   key3RfidText: 'third_key',
 
-  gate1Answer: 'logan',
+  gate1Answer: 'roger', // Roger Rabbit
   gate2Answer: 'nnnefepwwsw',
   gate3Answer: [
     { distances: [5, 10, 15], seconds: 15 },

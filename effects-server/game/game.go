@@ -14,6 +14,7 @@ import (
 var log *logrus.Entry
 
 var correctDistances = make([]bool, 3)
+var recordDistances = make([]int, 3)
 
 func Init(g *Game) {
 	log = logrus.WithFields(logrus.Fields{
@@ -44,30 +45,61 @@ func OnRunningTick(g *Game, games *mgo.Collection) {
 	distances := GetDistances()
 	expected := g.Data.Gate3Answer[g.Data.CurrentDistanceTestIndex]
 
-	if !correctDistances[0] && expected.Distances[0] == distances[0] {
-		correctDistances[0] = true
-	} else if math.Abs(float64(expected.Distances[0]-distances[0])) > 5 {
-		correctDistances[0] = false
+	if !correctDistances[0] {
+		if expected.Distances[0] == distances[0] {
+			correctDistances[0] = true
+			recordDistances[0] = expected.Distances[0]
+		} else {
+			recordDistances[0] = distances[0]
+		}
+	} else {
+		if math.Abs(float64(expected.Distances[0]-distances[0])) > 10 {
+			correctDistances[0] = false
+			recordDistances[0] = distances[0]
+		} else {
+			recordDistances[0] = expected.Distances[0]
+		}
 	}
 
-	if !correctDistances[1] && expected.Distances[1] == distances[1] {
-		correctDistances[1] = true
-	} else if math.Abs(float64(expected.Distances[1]-distances[1])) > 5 {
-		correctDistances[1] = false
+	if !correctDistances[1] {
+		if expected.Distances[1] == distances[1] {
+			correctDistances[1] = true
+			recordDistances[1] = expected.Distances[1]
+		} else {
+			recordDistances[1] = distances[1]
+		}
+	} else {
+		if math.Abs(float64(expected.Distances[1]-distances[1])) > 10 {
+			correctDistances[1] = false
+			recordDistances[1] = distances[1]
+		} else {
+			recordDistances[1] = expected.Distances[1]
+		}
 	}
 
-	if !correctDistances[2] && expected.Distances[2] == distances[2] {
-		correctDistances[2] = true
-	} else if math.Abs(float64(expected.Distances[2]-distances[2])) > 5 {
-		correctDistances[2] = false
+	if !correctDistances[2] {
+		if expected.Distances[2] == distances[2] {
+			correctDistances[2] = true
+			recordDistances[2] = expected.Distances[2]
+		} else {
+			recordDistances[2] = distances[2]
+		}
+	} else {
+		if math.Abs(float64(expected.Distances[2]-distances[2])) > 10 {
+			correctDistances[2] = false
+			recordDistances[2] = distances[2]
+		} else {
+			recordDistances[2] = expected.Distances[2]
+		}
 	}
 
+	log.Info("d: %v", correctDistances)
 	if correctDistances[0] &&
 		correctDistances[1] &&
 		correctDistances[2] {
-		handleCorrectDistanceAnswer(g, games, distances)
+		handleCorrectDistanceAnswer(g, games, recordDistances)
 	} else {
-		handleWrongDistanceAnswer(g, games, distances)
+		handleWrongDistanceAnswer(g, games, recordDistances)
 	}
 }
 
