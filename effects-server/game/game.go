@@ -7,11 +7,15 @@ import (
 
 var log *logrus.Entry
 
-func OnStarting(g *Game, games *mgo.Collection) {
+func OnInit(g *Game, games *mgo.Collection) {
 	log = logrus.WithFields(logrus.Fields{
 		"component": "game",
 		"gameId":    g.ID,
 	})
+}
+
+func OnStarting(g *Game, games *mgo.Collection) {
+	OnInit(g, games)
 }
 
 func OnStartingTick(g *Game, games *mgo.Collection) {
@@ -50,5 +54,9 @@ func OnDistanceChange(g *Game, games *mgo.Collection, distance float64) {
 }
 
 func OnRfid(g *Game, games *mgo.Collection, id int64, text string) {
+
+}
+
+func OnKeypad(g *Game, games *mgo.Collection, key string) {
 
 }

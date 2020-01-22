@@ -31,6 +31,7 @@ func SetUp(dbSession *mgo.Session) *gin.Engine {
 	r.POST("/motion", motion)
 	r.POST("/distance", distance)
 	r.POST("/rfid", rfid)
+	r.POST("/keypad", keypad)
 
 	checkAndResumeRunningGame()
 
