@@ -29,7 +29,7 @@ func motion(c *gin.Context) {
 		defer db.Close()
 		games := Games(db)
 		g := game.FindRunning(games)
-		if g != nil {
+		if g == nil {
 			return
 		}
 
@@ -58,7 +58,7 @@ func distance(c *gin.Context) {
 		defer db.Close()
 		games := Games(db)
 		g := game.FindRunning(games)
-		if g != nil {
+		if g == nil {
 			return
 		}
 
@@ -88,10 +88,40 @@ func rfid(c *gin.Context) {
 		defer db.Close()
 		games := Games(db)
 		g := game.FindRunning(games)
-		if g != nil {
+		if g == nil {
 			return
 		}
 
 		game.OnRfid(g, games, json.ID, json.Text)
+	}()
+}
+
+type GameKeypadPost struct {
+	Key string `json:"key"`
+}
+
+func keypad(c *gin.Context) {
+	var json GameKeypadPost
+	if err := c.ShouldBindJSON(&json); err != nil {
+		log.Errorf("Error: %s", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	log.Printf("/keypad = {keySequence=%s}", json.Key)
+	c.JSON(http.StatusOK, gin.H{})
+
+	db := c.MustGet("db").(*mgo.Session).Copy()
+
+	go func() {
+		defer db.Close()
+		games := Games(db)
+		g := game.FindRunning(games)
+		if g == nil {
+			log.Printf("Game is nil")
+			return
+		}
+
+		game.OnKeypad(g, games, json.Key)
 	}()
 }

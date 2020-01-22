@@ -8,6 +8,14 @@ export interface CustomDashboardProps {
 
 export class CustomDashboard extends Component<CustomDashboardProps> {
   render() {
-    return <h1>...you can customize this...</h1>
+    const {
+      data: { keys },
+    } = this.props.game
+
+    return (
+      <h1 className="display-1 text-center text-primary" style={{ marginTop: 60 }}>
+        {keys.join('')}
+      </h1>
+    )
   }
 }

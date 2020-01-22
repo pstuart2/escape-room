@@ -13,11 +13,13 @@ func checkAndResumeRunningGame() {
 	db := masterSession.Copy()
 	defer db.Close()
 
-	runningGame := game.FindRunning(Games(db))
+	games := Games(db)
+	runningGame := game.FindRunning(games)
 	if runningGame == nil {
 		return
 	}
 
+	game.OnInit(runningGame, games)
 	startTimer(runningGame.ID)
 }
 
