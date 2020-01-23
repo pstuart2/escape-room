@@ -1,6 +1,7 @@
 package api
 
 import (
+	"escape-room/effects-server/game"
 	"net/http"
 
 	"github.com/sirupsen/logrus"
@@ -33,6 +34,8 @@ func SetUp(dbSession *mgo.Session) *gin.Engine {
 	r.POST("/rfid", rfid)
 	r.POST("/keypad", keypad)
 
+	r.POST("/movefloor", moveFloor)
+
 	checkAndResumeRunningGame()
 
 	return r
@@ -64,4 +67,34 @@ func getGamePost(c *gin.Context) (string, *mgo.Collection) {
 	games := c.MustGet("games").(*mgo.Collection)
 
 	return json.Id, games
+}
+
+type MoveFloorPost struct {
+	Floors int `json:"floors"`
+}
+
+func moveFloor(c *gin.Context) {
+	var json MoveFloorPost
+	if err := c.ShouldBindJSON(&json); err != nil {
+		log.Errorf("Error: %s", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	log.Printf("/movefloor = {keySequence=%s}", json.Floors)
+	c.JSON(http.StatusOK, gin.H{})
+
+	db := c.MustGet("db").(*mgo.Session).Copy()
+
+	go func() {
+		defer db.Close()
+		games := Games(db)
+		g := game.FindRunning(games)
+		if g == nil {
+			log.Printf("Game is nil")
+			return
+		}
+
+		game.OnChangeFloor(g, games, json.Floors)
+	}()
 }

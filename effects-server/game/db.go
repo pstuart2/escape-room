@@ -81,3 +81,7 @@ func Update(games *mgo.Collection, id string, expectedState State, update interf
 
 	return &game
 }
+
+func SetMessage(games *mgo.Collection, id string, message string, seconds int) *Game {
+	return Update(games, id, Running, bson.M{"$set": bson.M{"data.keys": []string{}, "data.message": message, "data.messageSecondsLeft": seconds}})
+}

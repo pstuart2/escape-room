@@ -75,7 +75,7 @@ func startingTick(games *mgo.Collection, g *game.Game) {
 
 func runningTick(games *mgo.Collection, g *game.Game) {
 	log.Infof("runningTick for game %s", g.Name)
-	g = game.Update(games, g.ID, game.Running, bson.M{"$inc": bson.M{"time.gameRunningSeconds": 1}})
+	g = game.Update(games, g.ID, game.Running, bson.M{"$inc": bson.M{"time.gameRunningSeconds": 1, "data.messageSecondsLeft": -1}})
 
 	game.OnRunningTick(g, games)
 }
