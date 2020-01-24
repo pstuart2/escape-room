@@ -2,6 +2,7 @@ package api
 
 import (
 	"escape-room/effects-server/game"
+	"escape-room/effects-server/sound"
 	"time"
 
 	"github.com/globalsign/mgo/bson"
@@ -10,6 +11,10 @@ import (
 )
 
 func checkAndResumeRunningGame() {
+	go func() {
+		sound.Play(sound.Boom)
+	}()
+
 	db := masterSession.Copy()
 	defer db.Close()
 

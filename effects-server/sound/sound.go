@@ -21,6 +21,8 @@ const (
 	WrongAnswer           = "./sounds/wrong-answer.wav"
 	MarchMusic            = "./sounds/march-music.wav"
 	CompleteSong          = "./sounds/complete-song.wav"
+	Ominous               = "./sounds/ominous.wav"
+	Boom                  = "./sounds/boom.wav"
 )
 
 func Play(sound string) {

@@ -24,10 +24,16 @@ func OnInit(g *Game, games *mgo.Collection) {
 
 func OnStarting(g *Game, games *mgo.Collection) {
 	OnInit(g, games)
+
+	go func() {
+		sound.Play(sound.Boom)
+	}()
 }
 
 func OnStartingTick(g *Game, games *mgo.Collection) {
-
+	go func() {
+		sound.Play(sound.Boom)
+	}()
 }
 
 func OnStart(g *Game, games *mgo.Collection) {
@@ -228,6 +234,7 @@ func checkIfKeyComplete(g *Game, games *mgo.Collection) {
 		return
 	}
 
+	g = SetMessage(games, g.ID, "Success!", 60)
 	g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"state": Finished}})
 	go func() {
 		_, err := http.Get("http://192.168.86.102:8080/rainbow")
