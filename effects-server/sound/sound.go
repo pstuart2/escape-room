@@ -13,24 +13,14 @@ import (
 
 // TODO: These sounds are not a part of the repository and is just an example setup
 const (
-	BunnyGrowl        = "./sounds/bunny-growl.wav"
-	ChainDoorShut     = "./sounds/chain-door-shut.wav"
-	ChainDrag         = "./sounds/chain-drag.wav"
-	CreeperExplosion  = "./sounds/creeper-explosion.wav"
-	DoorSlam          = "./sounds/door-slam.wav"
-	EnderDeath        = "./sounds/ender-death-1.wav"
-	Explosion         = "./sounds/explosion.wav"
-	MusicLoop         = "./sounds/short-12second-music-loop.wav"
-	RandomDoorSlam    = "./sounds/random-door-slam.wav"
-	UndergroundEffect = "./sounds/underground-sound-effect.wav"
-
-	Pause       = "./sounds/pause.wav"
-	Unpause     = "./sounds/unpause.wav"
-	LightToggle = "./sounds/light-toggle.wav"
-
-	CorrectAnswer = "./sounds/correct-answer.wav"
-	WrongAnswer   = "./sounds/wrong-answer.wav"
-	Clapping      = "./sounds/clapping.wav"
+	AccessDenied          = "./sounds/access-denied-buzz.wav" //
+	BellDing              = "./sounds/bell-ding.wav"
+	DigiBuzz              = "./sounds/digi-buzz.wav"
+	Elevator              = "./sounds/elevator.wav"
+	TeleporterMalfunction = "./sounds/teleporter-malfunction.wav"
+	WrongAnswer           = "./sounds/wrong-answer.wav"
+	MarchMusic            = "./sounds/march-music.wav"
+	CompleteSong          = "./sounds/complete-song.wav"
 )
 
 func Play(sound string) {
@@ -50,7 +40,7 @@ func Play(sound string) {
 	<-done
 }
 
-var effects = []string{BunnyGrowl, ChainDrag, CreeperExplosion, EnderDeath, Explosion, RandomDoorSlam, MusicLoop, UndergroundEffect}
+var effects = []string{}
 
 func StartRandomEffects() chan bool {
 	stop := make(chan bool)

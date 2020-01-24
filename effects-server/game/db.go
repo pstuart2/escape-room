@@ -55,6 +55,10 @@ func FindById(games *mgo.Collection, id string) *Game {
 	return &game
 }
 
+func Games(s *mgo.Session) *mgo.Collection {
+	return s.DB("").C("games")
+}
+
 func FindRunning(games *mgo.Collection) *Game {
 	var game Game
 
