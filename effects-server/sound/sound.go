@@ -25,14 +25,32 @@ const (
 	Boom                  = "./sounds/boom.wav"
 )
 
+var s beep.StreamSeekCloser
+var done chan bool
+
 func Play(sound string) {
 	fmt.Printf("Starting sound: %s\n", sound)
 
+	if s != nil {
+		fmt.Println("S not nil, closing")
+		speaker.Lock()
+		s.Close()
+		//close(done)
+		speaker.Unlock()
+	}
+
+	var format beep.Format
+
 	f, _ := os.Open(sound)
-	s, format, _ := wav.Decode(f)
+	s, format, _ = wav.Decode(f)
+	defer func() {
+		s.Close()
+		s = nil
+	}()
+
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 
-	done := make(chan struct{})
+	done = make(chan bool)
 
 	speaker.Play(beep.Seq(s, beep.Callback(func() {
 		fmt.Printf("Ending sound: %s\n", sound)
@@ -41,6 +59,52 @@ func Play(sound string) {
 
 	<-done
 }
+
+/*
+func Play(sound string) {
+	fmt.Printf("Starting sound: %s\n", sound)
+
+	if ctrl != nil {
+		speaker.Lock()
+		ctrl.Paused = true
+		streamer.Close()
+		ctrl.Streamer = nil
+		speaker.Unlock()
+		done <- true
+	}
+
+	f, _ := os.Open(sound)
+	s, format, err := wav.Decode(f)
+	if err != nil {
+		fmt.Printf("Error loading sound: %v\n", err)
+		return
+	}
+	streamer = s
+	defer streamer.Close()
+	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+
+	seq := beep.Seq(streamer, beep.Callback(func() {
+		fmt.Printf("Ending sound: %s\n", sound)
+		done <- true
+	}))
+
+	ctrl = &beep.Ctrl{Streamer: seq, Paused: false}
+	speaker.Play(ctrl)
+
+	ctrl = nil
+	<-done
+	fmt.Printf(">>>> Exiting sound: %s\n", sound)
+
+	/*
+		done := make(chan struct{})
+
+			speaker.Play(beep.Seq(s, beep.Callback(func() {
+				fmt.Printf("Ending sound: %s\n", sound)
+				close(done)
+			})))
+
+			<-done
+*/
 
 var effects = []string{}
 

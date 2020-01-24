@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
@@ -14,6 +15,9 @@ import (
 
 var log *logrus.Entry
 var alreadyPlayingElevatorSound = false
+
+var Floor14 = "./sounds/floor_number_14_5wpm.wav"
+var Floor14IsPlaying = false
 
 func OnInit(g *Game, games *mgo.Collection) {
 	log = logrus.WithFields(logrus.Fields{
@@ -41,7 +45,18 @@ func OnStart(g *Game, games *mgo.Collection) {
 }
 
 func OnRunningTick(g *Game, games *mgo.Collection) {
-
+	if len(g.Data.ActualFloorSequence) == 1 && g.Data.Floor == g.Data.ExpectedFloorSequence[0] {
+		if !Floor14IsPlaying {
+			Floor14IsPlaying = true
+			go func() {
+				<-time.After(time.Second * time.Duration(5))
+				sound.Play(Floor14)
+				Floor14IsPlaying = false
+			}()
+		}
+	} else {
+		Floor14IsPlaying = false
+	}
 }
 
 func OnPause(g *Game, games *mgo.Collection) {
