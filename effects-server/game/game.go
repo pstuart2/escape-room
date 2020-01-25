@@ -16,8 +16,11 @@ import (
 var log *logrus.Entry
 var alreadyPlayingElevatorSound = false
 
-var Floor14 = "./sounds/floor_number_14_5wpm.wav"
-var Floor14IsPlaying = false
+var FloorSound = "./sounds/last_is_46.wav"
+var FloorIsPlaying = false
+
+var FloorSequence = []string{"f", "", "l", "", "o", "", "o", "", "r", "", "clear", "", "", "", "1", "", "4", "", "clear", "", "", ""}
+var FloorSequencePosition = 0
 
 func OnInit(g *Game, games *mgo.Collection) {
 	log = logrus.WithFields(logrus.Fields{
@@ -46,16 +49,34 @@ func OnStart(g *Game, games *mgo.Collection) {
 
 func OnRunningTick(g *Game, games *mgo.Collection) {
 	if len(g.Data.ActualFloorSequence) == 1 && g.Data.Floor == g.Data.ExpectedFloorSequence[0] {
-		if !Floor14IsPlaying {
-			Floor14IsPlaying = true
+		if FloorSequence[FloorSequencePosition] != "" {
+			showFloor := fmt.Sprintf("show/%s", FloorSequence[FloorSequencePosition])
+			log.Infof("Floor: [%s]", showFloor)
+			go func() {
+				updateLEDS(showFloor)
+			}()
+		}
+
+		FloorSequencePosition++
+		if FloorSequencePosition >= len(FloorSequence) {
+			FloorSequencePosition = 0
+		}
+
+	} else {
+		FloorSequencePosition = 0
+	}
+
+	if len(g.Data.ActualFloorSequence) == 2 && g.Data.Floor == g.Data.ExpectedFloorSequence[1] {
+		if !FloorIsPlaying {
+			FloorIsPlaying = true
 			go func() {
 				<-time.After(time.Second * time.Duration(5))
-				sound.Play(Floor14)
-				Floor14IsPlaying = false
+				sound.Play(FloorSound)
+				FloorIsPlaying = false
 			}()
 		}
 	} else {
-		Floor14IsPlaying = false
+		FloorIsPlaying = false
 	}
 }
 
@@ -202,19 +223,21 @@ func moveFloors(g *Game, games *mgo.Collection, targetFloor int) {
 		absFloorDiff := abs(floorDiff)
 
 		if floorDiff > 0 {
-			_, err := http.Get(fmt.Sprintf("http://192.168.86.102:8080/up/%d", absFloorDiff))
-			if err != nil {
-				log.Errorf("Error moving floors: %v", err)
-			}
+			updateLEDS(fmt.Sprintf("up/%d", absFloorDiff))
 		} else {
-			_, err := http.Get(fmt.Sprintf("http://192.168.86.102:8080/down/%d", absFloorDiff))
-			if err != nil {
-				log.Errorf("Error moving floors: %v", err)
-			}
+			updateLEDS(fmt.Sprintf("down/%d", absFloorDiff))
 		}
 
 		checkIfKeyFloor(g, Games(db), targetFloor)
 	}()
+}
+
+func updateLEDS(path string) {
+	log.Infof("Showing LEDS: %s", path)
+	_, err := http.Get(fmt.Sprintf("http://192.168.86.102:8080/%s", path))
+	if err != nil {
+		log.Errorf("Error updating LEDs (%s): %v", path, err)
+	}
 }
 
 func abs(x int) int {
@@ -251,11 +274,11 @@ func checkIfKeyComplete(g *Game, games *mgo.Collection) {
 
 	g = SetMessage(games, g.ID, "Success!", 60)
 	g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"state": Finished}})
+
+	<-time.After(time.Second * time.Duration(1))
+
 	go func() {
-		_, err := http.Get("http://192.168.86.102:8080/rainbow")
-		if err != nil {
-			log.Errorf("Rainbow error: %v", err)
-		}
+		updateLEDS("rainbow")
 	}()
 
 	go func() {
