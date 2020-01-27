@@ -33,14 +33,32 @@ const (
 	Clapping      = "./sounds/clapping.wav"
 )
 
+var s beep.StreamSeekCloser
+var done chan bool
+
 func Play(sound string) {
 	fmt.Printf("Starting sound: %s\n", sound)
 
+	if s != nil {
+		fmt.Println("S not nil, closing")
+		speaker.Lock()
+		s.Close()
+		//close(done)
+		speaker.Unlock()
+	}
+
+	var format beep.Format
+
 	f, _ := os.Open(sound)
-	s, format, _ := wav.Decode(f)
+	s, format, _ = wav.Decode(f)
+	defer func() {
+		s.Close()
+		s = nil
+	}()
+
 	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 
-	done := make(chan struct{})
+	done = make(chan bool)
 
 	speaker.Play(beep.Seq(s, beep.Callback(func() {
 		fmt.Printf("Ending sound: %s\n", sound)
