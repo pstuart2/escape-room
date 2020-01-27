@@ -28,6 +28,6 @@ export const getGameData = (): GameData => ({
   clue: '',
   message: '',
   messageSecondsLeft: 0,
-  expectedFloorSequence: [39, 14, 46],
+  expectedFloorSequence: [39, 17, 42],
   actualFloorSequence: [],
 })

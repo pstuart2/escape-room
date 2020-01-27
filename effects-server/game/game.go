@@ -194,6 +194,10 @@ func handleAnswer(g *Game, games *mgo.Collection, answer string) {
 	case Floors:
 		// Move floor
 		targetFloor, _ := strconv.Atoi(answer)
+		if targetFloor >= 100 || targetFloor <= 0 {
+			SetMessage(games, g.ID, fmt.Sprintf("%d is an invalid floor", targetFloor), 3)
+			return
+		}
 		moveFloors(g, games, targetFloor)
 		g = Update(games, g.ID, Running, bson.M{"$set": bson.M{"data.keys": []string{}, "data.targetFloor": targetFloor}})
 
